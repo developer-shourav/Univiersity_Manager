@@ -1,15 +1,4 @@
 import { Schema, model } from 'mongoose';
-// import validator from 'validator';
-
-// ----------Imports for custom instance method
-/* import {
-  TGuardian,
-  TLocalGuardian,
-  TStudent,
-  StudentMethods,
-  TUserName,
-} from './student.interface';
- */
 
 // ----------Imports for custom Static method
 import {
@@ -20,9 +9,6 @@ import {
   StudentModel,
 } from './student.interface';
 
-import bcrypt from 'bcrypt';
-import config from '../../config';
-
 /*-------------- Example of setting required field with custom Error Message ------------ */
 const studentNameSchema = new Schema<TUserName>({
   firstName: {
@@ -30,25 +16,12 @@ const studentNameSchema = new Schema<TUserName>({
     required: [true, 'First name is required.'],
     trim: true,
     maxlength: [20, 'First Name can not be more than 20 characters'],
-    // Create Custom Validator Function ------------------
-    // validate: {
-    //   validator: function (value: string) {
-    //     const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-    //     return firstNameStr === value;
-    //   },
-    //   message: '{VALUE} is not in capitalize format',
-    // },
   },
   middleName: { type: String, trim: true },
   lastName: {
     type: String,
     required: [true, 'Last name is required.'],
     trim: true,
-    // String Validation Using `validator` library ---------------------
-    // validate: {
-    //   validator: (value: string) => validator.isAlpha(value),
-    //   message: '{VALUE} is not valid',
-    // },
   },
 });
 
@@ -112,10 +85,11 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Student ID is required.'],
       unique: true,
     },
-    password: {
-      type: String,
-      required: [true, 'Password is required.'],
-      maxlength: [20, 'Password max length is 20'],
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User id is required'],
+      unique: true,
+      ref: 'User',
     },
     name: {
       type: studentNameSchema,
@@ -139,10 +113,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: String,
       required: [true, 'Email is required.'],
       trim: true,
-      // validate: {
-      //   validator: (value: string) => validator.isEmail(value),
-      //   message: '{VALUE} is not a valid email',
-      // },
     },
     contactNumber: {
       type: String,
@@ -181,14 +151,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       trim: true,
     },
     profileImage: { type: String },
-    isActive: {
-      type: String,
-      enum: {
-        values: ['active', 'blocked'],
-        message: '{VALUE} is not a valid status.',
-      },
-      default: 'active',
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -204,30 +166,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 // -------------Create Mongoose Virtual property ---------
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
-});
-
-/* --------------- Document Middleware ------------------------- */
-
-// -------pre save middleware / hook : It will work when student create or save
-studentSchema.pre('save', async function (next) {
-  // console.log(this.name, 'pre hook: We will save the data');
-
-  // Hashing The password and save into the DB
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this; // `this` is actually our document
-
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_round),
-  );
-  next();
-});
-
-// ---------post save middleware / hook
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-
-  next();
 });
 
 /* --------------- Query Middleware ------------------------- */
@@ -248,14 +186,6 @@ studentSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
-
-/*
-// Create a custom instance method -------------------------
-studentSchema.methods.isUserExists = async function (id: string) {
-  const existingUser = await Student.findOne({ id });
-  return existingUser;
-}; 
-*/
 
 // Create a custom static method -------------------------
 studentSchema.statics.isUserExists = async function (id: string) {
