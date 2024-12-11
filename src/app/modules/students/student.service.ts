@@ -1,31 +1,4 @@
 import { Student } from './student.model';
-import { TStudent } from './student.interface';
-
-/* --------Logic For Create an Student------ */
-const createStudentIntoDB = async (studentData: TStudent) => {
-  // const result = await Student.create(studentData); // Builtin static method
-  //------------------- Custom instance method (Built in instance method provided by Mongoose) ------------
-  /*
-  const student = new Student(studentData); // Create an instance
-
-  if (await student.isUserExists(studentData?.id)) {
-    throw new Error('User already exist!');
-  }
-
-  const result = await student.save(); // 
-  return result; 
-  */
-
-  //------------------- Static instance method (Built in instance method provided by Mongoose) ------------
-
-  if (await Student.isUserExists(studentData?.id)) {
-    throw new Error('User already exist!');
-  }
-
-  const result = await Student.create(studentData);
-
-  return result;
-};
 
 /* --------Logic For Get All Students------ */
 const getAllStudentsFromDB = async () => {
@@ -51,7 +24,6 @@ const deleteAStudentFromDB = async (id: string) => {
 };
 
 export const studentServices = {
-  createStudentIntoDB,
   getAllStudentsFromDB,
   getAStudentFromDB,
   deleteAStudentFromDB,
