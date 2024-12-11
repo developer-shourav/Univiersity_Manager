@@ -1,35 +1,12 @@
 import { Request, Response } from 'express';
 import { studentServices } from './student.service';
-// import studentValidationSchema from './student.joi.validation';
+
 import { studentValidationSchema } from './student.zod.validation';
 
 /* ----------------------Create A Student----------------- */
 const createStudent = async (req: Request, res: Response) => {
   try {
     const { student: createNewStudentData } = req.body;
-
-    /* // -------------Validate Data Using Use Joi Validation-----------
-    const { error, value } =
-      studentValidationSchema.validate(createNewStudentData);
-
-    if (error) {
-      // If Validation Error Happens Send response and stop further execution
-      return res.status(500).json({
-        success: false,
-        message: 'Validation error!',
-        error: error.details,
-      });
-    }
-
-    // will call service function to send this data
-    const result = await studentServices.createStudentIntoDB(value);
-
-    // Send Response to the frontend
-    res.status(200).json({
-      success: true,
-      message: 'Student is created successfully',
-      data: result,
-    }); */
 
     // -------------Validate Data Using Use Zod Validation-----------
 
@@ -124,4 +101,9 @@ const deleteAStudent = async (req: Request, res: Response) => {
   }
 };
 
-export const StudentControllers = { createStudent, getAllStudent, getAStudent, deleteAStudent };
+export const StudentControllers = {
+  createStudent,
+  getAllStudent,
+  getAStudent,
+  deleteAStudent,
+};

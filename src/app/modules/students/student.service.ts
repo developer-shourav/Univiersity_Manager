@@ -1,4 +1,4 @@
-import { Student } from '../student.modle';
+import { Student } from './student.model';
 import { TStudent } from './student.interface';
 
 /* --------Logic For Create an Student------ */
