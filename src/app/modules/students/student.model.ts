@@ -8,7 +8,7 @@ import { Schema, model } from 'mongoose';
   TStudent,
   StudentMethods,
   TUserName,
-} from './students/student.interface';
+} from './student.interface';
  */
 
 // ----------Imports for custom Static method
@@ -18,10 +18,10 @@ import {
   TStudent,
   TUserName,
   StudentModel,
-} from './students/student.interface';
+} from './student.interface';
 
 import bcrypt from 'bcrypt';
-import config from '../config';
+import config from '../../config';
 
 /*-------------- Example of setting required field with custom Error Message ------------ */
 const studentNameSchema = new Schema<TUserName>({
