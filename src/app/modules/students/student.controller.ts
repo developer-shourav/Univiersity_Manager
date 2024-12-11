@@ -1,8 +1,12 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { studentServices } from './student.service';
 
 /* ----------------------Get All Student----------------- */
-const getAllStudent = async (req: Request, res: Response) => {
+const getAllStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     // 1. Will call service function to get all Students
     const result = await studentServices.getAllStudentsFromDB();
@@ -13,18 +17,20 @@ const getAllStudent = async (req: Request, res: Response) => {
       message: 'All students are retrieved successfully',
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     // If error occurs then give error response to the Fronted
-    res.status(500).json({
+   /*  res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong!',
       error: err,
-    });
+    }); */
+
+    next(err)
   }
 };
 
 /* ----------------------Get Single Student----------------- */
-const getAStudent = async (req: Request, res: Response) => {
+const getAStudent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // 1. Will Call service function to get the student using id
     const { studentId } = req.params;
@@ -36,18 +42,13 @@ const getAStudent = async (req: Request, res: Response) => {
       message: 'Student retrieved successfully',
       data: result,
     });
-  } catch (err: any) {
-    // If error occurs then give error response to the Fronted
-    res.status(500).json({
-      success: false,
-      message: err.message || 'Something went wrong!',
-      error: err,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
 /* ----------------------Delete Single Student----------------- */
-const deleteAStudent = async (req: Request, res: Response) => {
+const deleteAStudent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // 1. Will Call service function to get the student using id
     const { studentId } = req.params;
@@ -59,13 +60,8 @@ const deleteAStudent = async (req: Request, res: Response) => {
       message: 'Student Delete successfully',
       data: result,
     });
-  } catch (err: any) {
-    // If error occurs then give error response to the Fronted
-    res.status(500).json({
-      success: false,
-      message: err.message || 'Something went wrong!',
-      error: err,
-    });
+  } catch (err) {
+    next(err)
   }
 };
 
