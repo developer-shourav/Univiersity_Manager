@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { studentServices } from './student.service';
+import sendResponse from '../../utils/sendResponse';
 
 /* ----------------------Get All Student----------------- */
 const getAllStudent = async (
@@ -12,20 +13,12 @@ const getAllStudent = async (
     const result = await studentServices.getAllStudentsFromDB();
 
     // 2. Send Response to the frontend
-    res.status(200).json({
-      success: true,
+    sendResponse(res, {
       message: 'All students are retrieved successfully',
       data: result,
     });
   } catch (err) {
-    // If error occurs then give error response to the Fronted
-   /*  res.status(500).json({
-      success: false,
-      message: err.message || 'Something went wrong!',
-      error: err,
-    }); */
-
-    next(err)
+    next(err);
   }
 };
 
@@ -37,8 +30,7 @@ const getAStudent = async (req: Request, res: Response, next: NextFunction) => {
     const result = await studentServices.getAStudentFromDB(studentId);
 
     // 2. Send Response to the frontend
-    res.status(200).json({
-      success: true,
+    sendResponse(res, {
       message: 'Student retrieved successfully',
       data: result,
     });
@@ -48,20 +40,23 @@ const getAStudent = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 /* ----------------------Delete Single Student----------------- */
-const deleteAStudent = async (req: Request, res: Response, next: NextFunction) => {
+const deleteAStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     // 1. Will Call service function to get the student using id
     const { studentId } = req.params;
     const result = await studentServices.deleteAStudentFromDB(studentId);
 
     // 2. Send Response to the frontend
-    res.status(200).json({
-      success: true,
+    sendResponse(res, {
       message: 'Student Delete successfully',
       data: result,
     });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
 
