@@ -32,7 +32,6 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
 
     return newStudent;
   }
-
 };
 
 export const UserServices = {

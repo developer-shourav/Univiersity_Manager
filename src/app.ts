@@ -3,13 +3,14 @@ import cors from 'cors';
 import { StudentRoutes } from './app/modules/students/student.routes';
 import { UserRoutes } from './app/modules/user/user.routes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
+
 const app: Application = express();
 
 /* --------Parser--------- */
 app.use(express.json());
 app.use(cors());
 
-/* ------- Application Routes----------  */
+/* ------- Application Routes---------- */
 
 /* ------- User Route */
 app.use('/api/v1/users', UserRoutes);
@@ -22,6 +23,6 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 /* ------Global Error Handler------- */
-app.use(globalErrorHandler);
+app.use(globalErrorHandler as express.ErrorRequestHandler); // Explicitly cast here
 
 export default app;

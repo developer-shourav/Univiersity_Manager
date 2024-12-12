@@ -19,13 +19,13 @@ const getAllStudent = async (
     });
   } catch (err) {
     // If error occurs then give error response to the Fronted
-   /*  res.status(500).json({
+    /*  res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong!',
       error: err,
     }); */
 
-    next(err)
+    next(err);
   }
 };
 
@@ -48,7 +48,11 @@ const getAStudent = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 /* ----------------------Delete Single Student----------------- */
-const deleteAStudent = async (req: Request, res: Response, next: NextFunction) => {
+const deleteAStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     // 1. Will Call service function to get the student using id
     const { studentId } = req.params;
@@ -61,7 +65,7 @@ const deleteAStudent = async (req: Request, res: Response, next: NextFunction) =
       data: result,
     });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
 
