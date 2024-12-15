@@ -48,21 +48,9 @@ export type TStudent = {
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
   profileImage?: string;
+  admissionSemester: Types.ObjectId;
   isDeleted: boolean;
 };
-
-// -------------- For creating Custom instance
-
-/* export interface StudentMethods {
-  isUserExists(id: string): Promise<TStudent | null>;
-};
-
-export type StudentModel = Model<
-  TStudent,
-  Record<string, never>,
-  StudentMethods
->;
- */
 
 // -------------- For crating Static instance
 
