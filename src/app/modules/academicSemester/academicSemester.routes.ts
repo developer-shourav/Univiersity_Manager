@@ -18,4 +18,13 @@ router.get('/', AcademicSemesterControllers.getAcademicSemesters);
 /* ------------Get an Academic Semester ---------- */
 router.get('/:id', AcademicSemesterControllers.getAnAcademicSemester);
 
+/* ------------Update an Academic Semester ---------- */
+router.patch(
+  '/:id',
+  validateRequest(
+    academicSemesterValidations.updateAcademicSemesterValidationSchema,
+  ),
+  AcademicSemesterControllers.updateAcademicSemester,
+);
+
 export const AcademicSemesterRoutes = router;
