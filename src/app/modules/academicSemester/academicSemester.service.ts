@@ -19,7 +19,18 @@ const getAllAcademicSemestersFromDB = async () => {
   return result;
 };
 
+/* --------------Get all Academic Semesters from Database---------- */
+const getAnAcademicSemesterFromDB = async (id: string) => {
+  const result = await AcademicSemester.findById({ _id: id });
+  if (!result) {
+    throw new Error('Academic Semester Not Found !!');
+  }
+
+  return result;
+};
+
 export const AcademicSemesterServices = {
   createAcademicSemesterIntoDB,
   getAllAcademicSemestersFromDB,
+  getAnAcademicSemesterFromDB,
 };
