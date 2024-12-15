@@ -105,7 +105,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       trim: true,
     },
     dateOfBirth: {
-      type: Date,
+      type: String,
     },
     // String Validation Using `validator` library ---------------------
     email: {
