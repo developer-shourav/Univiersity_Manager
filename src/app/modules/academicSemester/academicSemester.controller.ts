@@ -24,7 +24,35 @@ const getAcademicSemesters = catchAsync(async (req, res) => {
   });
 });
 
+/* ----------------------Get An Academic Semester----------------- */
+const getAnAcademicSemester = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await AcademicSemesterServices.getAnAcademicSemesterFromDB(id);
+
+  sendResponse(res, {
+    message: 'Academic Semester retrieved successfully',
+    data: result,
+  });
+});
+
+/* ----------------------Update An Academic Semester----------------- */
+
+const updateAcademicSemester = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await AcademicSemesterServices.updateAcademicSemesterIntoDB(
+    id,
+    req.body,
+  );
+
+  sendResponse(res, {
+    message: 'Academic Semester Update successfully',
+    data: result,
+  });
+});
+
 export const AcademicSemesterControllers = {
   createAcademicSemester,
   getAcademicSemesters,
+  getAnAcademicSemester,
+  updateAcademicSemester,
 };
