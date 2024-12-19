@@ -7,7 +7,7 @@ const router = Router();
 
 /* ------------Create a Semester---------- */
 router.post(
-  '/createAcademicSemester',
+  '/create-academic-semester',
   validateRequest(academicSemesterValidations.createAcademicValidationSchema),
   AcademicSemesterControllers.createAcademicSemester,
 );
