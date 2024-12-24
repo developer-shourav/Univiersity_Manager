@@ -7,11 +7,12 @@ import handleZodError from '../errors/handleZodError';
 import handleMongooseValidationError from '../errors/handleMongooseValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
+import AppError from '../errors/AppError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // --------- Initialize  Default Values
-  let statusCode = err.status || 500; // Use a status code from the error if available
-  let message = err.message || 'Something went wrong!';
+  let statusCode = 500; // Internal Server Error
+  let message =  'Something went wrong!';
 
   let errorSources: TErrorSources = [
     {
@@ -20,7 +21,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     },
   ];
 
-  /* ------------Ensure the error type ------------- */
+  /* --------------Ensure the error type ------------- */
 
   // ---- Zod Error Handler
   if (err instanceof ZodError) {
@@ -53,7 +54,31 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
   }
-    
+
+  // ---- AppError Handler
+  else if (err instanceof AppError) {
+    statusCode = err?.statusCode;
+    message = err.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
+  } 
+  
+  // ---- New Error Handler
+  else if (err instanceof Error) {
+    message = err.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
+  }
+
+
 
   res.status(statusCode).json({
     success: false,
