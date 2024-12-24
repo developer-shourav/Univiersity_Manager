@@ -196,7 +196,7 @@ studentSchema.pre('aggregate', function (next) {
 
 // Create a custom static method -------------------------
 studentSchema.statics.isUserExists = async function (id: string) {
-  const existingUser = await Student.findOne({ id });
+  const existingUser = await Student.findOne({ id , isDeleted: { $ne: false } });
   return existingUser;
 };
 
