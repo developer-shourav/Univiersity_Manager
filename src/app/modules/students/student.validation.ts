@@ -2,25 +2,25 @@ import { z } from 'zod';
 
 // Define Zod schemas for nested objects first
 const userNameValidationSchema = z.object({
-  firstName: z.string().trim().max(20),
+  firstName: z.string().max(20),
   middleName: z.string().optional(),
-  lastName: z.string().trim(),
+  lastName: z.string(),
 });
 
 const guardianValidationSchema = z.object({
-  fatherName: z.string().trim(),
-  fatherOccupation: z.string().trim(),
-  fathersContactNo: z.string().trim(),
-  motherName: z.string().trim(),
-  motherOccupation: z.string().trim(),
-  motherContactNo: z.string().trim(),
+  fatherName: z.string(),
+  fatherOccupation: z.string(),
+  fathersContactNo: z.string(),
+  motherName: z.string(),
+  motherOccupation: z.string(),
+  motherContactNo: z.string(),
 });
 
 const localGuardianValidationSchema = z.object({
-  name: z.string().trim(),
-  occupation: z.string().trim(),
-  contactNo: z.string().trim(),
-  address: z.string().trim(),
+  name: z.string(),
+  occupation: z.string(),
+  contactNo: z.string(),
+  address: z.string(),
 });
 
 // Define the main Student schema
@@ -31,12 +31,12 @@ const createStudentValidationSchema = z.object({
       name: userNameValidationSchema,
       gender: z.enum(['male', 'female', 'other']),
       dateOfBirth: z.string().optional(),
-      email: z.string().email().trim(),
-      contactNumber: z.string().trim(),
-      emergencyContactNo: z.string().trim(),
+      email: z.string().email(),
+      contactNumber: z.string(),
+      emergencyContactNo: z.string(),
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
-      presentAddress: z.string().trim(),
-      permanentAddress: z.string().trim(),
+      presentAddress: z.string(),
+      permanentAddress: z.string(),
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
       admissionSemester: z.string(),
@@ -48,25 +48,25 @@ const createStudentValidationSchema = z.object({
 
 // Update Validation Schema
 const updateUserNameValidationSchema = z.object({
-  firstName: z.string().trim().max(20).optional(),
+  firstName: z.string().max(20).optional(),
   middleName: z.string().optional(),
-  lastName: z.string().trim().optional(),
+  lastName: z.string().optional(),
 });
 
 const updateGuardianValidationSchema = z.object({
-  fatherName: z.string().trim().optional(),
-  fatherOccupation: z.string().trim().optional(),
-  fathersContactNo: z.string().trim().optional(),
-  motherName: z.string().trim().optional(),
-  motherOccupation: z.string().trim().optional(),
-  motherContactNo: z.string().trim().optional(),
+  fatherName: z.string().optional(),
+  fatherOccupation: z.string().optional(),
+  fathersContactNo: z.string().optional(),
+  motherName: z.string().optional(),
+  motherOccupation: z.string().optional(),
+  motherContactNo: z.string().optional(),
 });
 
 const updateLocalGuardianValidationSchema = z.object({
-  name: z.string().trim().optional(),
-  occupation: z.string().trim().optional(),
-  contactNo: z.string().trim().optional(),
-  address: z.string().trim().optional(),
+  name: z.string().optional(),
+  occupation: z.string().optional(),
+  contactNo: z.string().optional(),
+  address: z.string().optional(),
 });
 
 // Define the main Update Student schema
@@ -76,16 +76,16 @@ const updateStudentValidationSchema = z.object({
       name: updateUserNameValidationSchema,
       gender: z.enum(['male', 'female', 'other']).optional(),
       dateOfBirth: z.string().optional(),
-      email: z.string().email().trim().optional(),
-      contactNumber: z.string().trim().optional(),
-      emergencyContactNo: z.string().trim().optional(),
+      email: z.string().email().optional(),
+      contactNumber: z.string().optional(),
+      emergencyContactNo: z.string().optional(),
       bloodGroup: z
         .enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])
         .optional(),
-      presentAddress: z.string().trim().optional(),
-      permanentAddress: z.string().trim().optional(),
-      guardian: updateGuardianValidationSchema,
-      localGuardian: updateLocalGuardianValidationSchema,
+      presentAddress: z.string().optional(),
+      permanentAddress: z.string().optional(),
+      guardian: updateGuardianValidationSchema.optional(),
+      localGuardian: updateLocalGuardianValidationSchema.optional(),
       admissionSemester: z.string().optional(),
       profileImage: z.string().optional(), // Assuming URLs for profile images
       academicDepartment: z.string().optional(),

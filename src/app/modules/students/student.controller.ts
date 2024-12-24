@@ -31,7 +31,8 @@ const getAStudent = catchAsync(async (req, res) => {
 const updateAStudent = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the student using id
   const { studentId } = req.params;
-  const result = await studentServices.updateAStudentFromDB(studentId);
+  const { student } = req.body;
+  const result = await studentServices.updateAStudentFromDB(studentId, student);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
