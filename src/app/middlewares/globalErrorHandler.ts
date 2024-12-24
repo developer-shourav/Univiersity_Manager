@@ -1,17 +1,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ErrorRequestHandler } from 'express';
-import { ZodError } from 'zod';
+import e, { ErrorRequestHandler } from 'express';
+import { ZodError, ZodIssue } from 'zod';
+import { TErrorSource } from '../interface/error';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // Setting Default Values
   let statusCode = err.status || 500; // Use a status code from the error if available
   let message = err.message || 'Something went wrong!';
-
-  type TErrorSource = {
-    path: string | number | undefined | null;
-    message: string;
-  }[];
 
   let errorSources: TErrorSource = [
     {
@@ -20,17 +16,36 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     },
   ];
 
+  /* ------------ Zod Error Handler--------- */
+  const handleZodError = (err: ZodError) => {
+    const errorSources: TErrorSource = err.issues.map((issue: ZodIssue) => {
+      return {
+        path: issue?.path[issue.path.length - 1],
+        message: issue.message,
+      };
+    });
+    const statusCode = 400;
+
+    return {
+      statusCode,
+      message: 'Validation Error',
+      errorSources,
+    };
+  };
+
   /* ---------Ensure the error type ----------- */
   if (err instanceof ZodError) {
-    statusCode = 400;
-    message = 'Ami Zod Error';
+    const simplifiedError = handleZodError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
   }
 
-  return res.status(statusCode).json({
+  res.status(statusCode).json({
     success: false,
     message,
     errorSources,
-    error: err,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : null,
   });
 };
 
