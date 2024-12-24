@@ -5,6 +5,7 @@ import { ZodError } from 'zod';
 import { TErrorSources } from '../interface/error';
 import handleZodError from '../errors/handleZodError';
 import handleMongooseValidationError from '../errors/handleMongooseValidationError';
+import handleCastError from '../errors/handleCastError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // --------- Initialize  Default Values
@@ -36,10 +37,20 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     errorSources = simplifiedError?.errorSources;
   }
 
+  // ---- Mongoose Cast Error Handler
+  else if (err.name === 'CastError') {
+    const simplifiedError = handleCastError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+
+  }
+
   res.status(statusCode).json({
     success: false,
     message,
     errorSources,
+    err,
     stack: process.env.NODE_ENV === 'development' ? err.stack : null,
   });
 };
