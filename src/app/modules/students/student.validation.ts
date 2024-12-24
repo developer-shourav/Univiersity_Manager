@@ -46,6 +46,54 @@ const createStudentValidationSchema = z.object({
   }),
 });
 
+// Update Validation Schema
+const updateUserNameValidationSchema = z.object({
+  firstName: z.string().trim().max(20).optional(),
+  middleName: z.string().optional(),
+  lastName: z.string().trim().optional(),
+});
+
+const updateGuardianValidationSchema = z.object({
+  fatherName: z.string().trim().optional(),
+  fatherOccupation: z.string().trim().optional(),
+  fathersContactNo: z.string().trim().optional(),
+  motherName: z.string().trim().optional(),
+  motherOccupation: z.string().trim().optional(),
+  motherContactNo: z.string().trim().optional(),
+});
+
+const updateLocalGuardianValidationSchema = z.object({
+  name: z.string().trim().optional(),
+  occupation: z.string().trim().optional(),
+  contactNo: z.string().trim().optional(),
+  address: z.string().trim().optional(),
+});
+
+// Define the main Update Student schema
+const updateStudentValidationSchema = z.object({
+  body: z.object({
+    student: z.object({
+      name: updateUserNameValidationSchema,
+      gender: z.enum(['male', 'female', 'other']).optional(),
+      dateOfBirth: z.string().optional(),
+      email: z.string().email().trim().optional(),
+      contactNumber: z.string().trim().optional(),
+      emergencyContactNo: z.string().trim().optional(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])
+        .optional(),
+      presentAddress: z.string().trim().optional(),
+      permanentAddress: z.string().trim().optional(),
+      guardian: updateGuardianValidationSchema,
+      localGuardian: updateLocalGuardianValidationSchema,
+      admissionSemester: z.string().optional(),
+      profileImage: z.string().optional(), // Assuming URLs for profile images
+      academicDepartment: z.string().optional(),
+    }),
+  }),
+});
+
 export const studentValidations = {
   createStudentValidationSchema,
+  updateStudentValidationSchema,
 };

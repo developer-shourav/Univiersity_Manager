@@ -4,7 +4,7 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 
-/* --------Logic For Get All Students------ */
+/* --------Logic For Get All Students From Database------ */
 const getAllStudentsFromDB = async () => {
   const result = await Student.find()
     .populate('admissionSemester')
@@ -17,7 +17,7 @@ const getAllStudentsFromDB = async () => {
   return result;
 };
 
-/* --------Logic For Get A Students------ */
+/* --------Logic For Get A Students From Database------ */
 const getAStudentFromDB = async (id: string) => {
   // using query
   const result = await Student.findOne({ id })
@@ -36,6 +36,13 @@ const getAStudentFromDB = async (id: string) => {
   return result;
 };
 
+/* --------Logic For Update A Students From Database------ */
+const updateAStudentFromDB = async (id: string) => {
+  const result = await Student.findOne({ id });
+
+  return result;
+};
+
 /* --------Logic For Delete A Student------ */
 const deleteAStudentFromDB = async (id: string) => {
   const session = await mongoose.startSession();
@@ -43,7 +50,10 @@ const deleteAStudentFromDB = async (id: string) => {
   try {
     session.startTransaction();
 
-    const isStudentExist = await Student.findOne({ id, isDeleted: { $eq: true } });
+    const isStudentExist = await Student.findOne({
+      id,
+      isDeleted: { $eq: true },
+    });
     if (!isStudentExist) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Student not found');
     }
@@ -81,5 +91,6 @@ const deleteAStudentFromDB = async (id: string) => {
 export const studentServices = {
   getAllStudentsFromDB,
   getAStudentFromDB,
+  updateAStudentFromDB,
   deleteAStudentFromDB,
 };
