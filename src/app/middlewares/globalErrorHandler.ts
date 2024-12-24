@@ -1,41 +1,36 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import e, { ErrorRequestHandler } from 'express';
-import { ZodError, ZodIssue } from 'zod';
-import { TErrorSource } from '../interface/error';
+import { ErrorRequestHandler } from 'express';
+import { ZodError } from 'zod';
+import { TErrorSources } from '../interface/error';
+import handleZodError from '../errors/handleZodError';
+import handleMongooseValidationError from '../errors/handleMongooseValidationError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  // Setting Default Values
+  // --------- Initialize  Default Values
   let statusCode = err.status || 500; // Use a status code from the error if available
   let message = err.message || 'Something went wrong!';
 
-  let errorSources: TErrorSource = [
+  let errorSources: TErrorSources = [
     {
       path: '',
       message: 'Something went wrong!',
     },
   ];
 
-  /* ------------ Zod Error Handler--------- */
-  const handleZodError = (err: ZodError) => {
-    const errorSources: TErrorSource = err.issues.map((issue: ZodIssue) => {
-      return {
-        path: issue?.path[issue.path.length - 1],
-        message: issue.message,
-      };
-    });
-    const statusCode = 400;
-
-    return {
-      statusCode,
-      message: 'Validation Error',
-      errorSources,
-    };
-  };
-
-  /* ---------Ensure the error type ----------- */
+  /* ------------Ensure the error type ------------- */
+ 
+  // ---- Zod Error Handler
   if (err instanceof ZodError) {
     const simplifiedError = handleZodError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  }
+
+  // ---- Mongoose Error Handler
+  else if (err.name === 'ValidationError') {
+    const simplifiedError = handleMongooseValidationError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
@@ -50,18 +45,3 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 };
 
 export default globalErrorHandler;
-
-//------------- Our targeted error pattern -------------
-/*
-
-success: false,
-message: 'Something went wrong!',
-errorSources:[
-  path:'',
-  message:''
-]
-stack: 'Error stack trace'
-
-
-
-*/
