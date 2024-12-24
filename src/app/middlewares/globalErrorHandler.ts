@@ -19,7 +19,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   ];
 
   /* ------------Ensure the error type ------------- */
- 
+
   // ---- Zod Error Handler
   if (err instanceof ZodError) {
     const simplifiedError = handleZodError(err);
