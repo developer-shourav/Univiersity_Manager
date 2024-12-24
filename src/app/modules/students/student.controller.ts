@@ -27,6 +27,20 @@ const getAStudent = catchAsync(async (req, res) => {
   });
 });
 
+/* ----------------------Update Single Student----------------- */
+const updateAStudent = catchAsync(async (req, res) => {
+  // 1. Will Call service function to get the student using id
+  const { studentId } = req.params;
+  const { student } = req.body;
+  const result = await studentServices.updateAStudentFromDB(studentId, student);
+
+  // 2. Send Response to the frontend
+  sendResponse(res, {
+    message: 'Student Updated successfully',
+    data: result,
+  });
+});
+
 /* ----------------------Delete Single Student----------------- */
 const deleteAStudent = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the student using id
@@ -43,5 +57,6 @@ const deleteAStudent = catchAsync(async (req, res) => {
 export const StudentControllers = {
   getAllStudent,
   getAStudent,
+  updateAStudent,
   deleteAStudent,
 };
