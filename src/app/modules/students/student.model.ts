@@ -107,11 +107,10 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     dateOfBirth: {
       type: String,
     },
-    // String Validation Using `validator` library ---------------------
     email: {
       type: String,
       required: [true, 'Email is required.'],
-      trim: true,
+      unique: true,
     },
     contactNumber: {
       type: String,
@@ -172,7 +171,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 
 // -------------Create Mongoose Virtual property ---------
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+  return `${this.name.firstName} ${this.name.middleName ? this.name.middleName : ''} ${this.name.lastName}`;
 });
 
 /* --------------- Query Middleware ------------------------- */

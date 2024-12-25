@@ -4,8 +4,9 @@ import sendResponse from '../../utils/sendResponse';
 
 /* ----------------------Get All Student----------------- */
 const getAllStudent = catchAsync(async (req, res) => {
+  const queries = req.query;
   // 1. Will call service function to get all Students
-  const result = await studentServices.getAllStudentsFromDB();
+  const result = await studentServices.getAllStudentsFromDB(queries);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
