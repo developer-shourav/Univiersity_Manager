@@ -12,7 +12,7 @@ import AppError from '../errors/AppError';
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // --------- Initialize  Default Values
   let statusCode = 500; // Internal Server Error
-  let message =  'Something went wrong!';
+  let message = 'Something went wrong!';
 
   let errorSources: TErrorSources = [
     {
@@ -65,8 +65,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
         message: err?.message,
       },
     ];
-  } 
-  
+  }
+
   // ---- New Error Handler
   else if (err instanceof Error) {
     message = err.message;
@@ -77,8 +77,6 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
       },
     ];
   }
-
-
 
   res.status(statusCode).json({
     success: false,
