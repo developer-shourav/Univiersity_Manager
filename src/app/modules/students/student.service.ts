@@ -46,9 +46,17 @@ const getAllStudentsFromDB = async (queries: Record<string, unknown>) => {
     sort = queries?.sortBy as string;
   }
 
-  const sortQuery = await filterQuery.sort(sort);
+  const sortQuery =  filterQuery.sort(sort);
 
-  const result = sortQuery;
+  // ---Logic For Limit Student Data ---
+  let limitValue = 10;
+  if (queries?.limit) {
+    limitValue = parseInt(queries?.limit as string);
+  }
+
+  const limitQuery = await sortQuery.limit(limitValue);
+
+  const result = limitQuery;
   return result;
 };
 
