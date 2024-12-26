@@ -4,76 +4,25 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 import { TStudent } from './student.interface';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 /* --------Logic For Get All Students From Database------ */
-const getAllStudentsFromDB = async (queries: Record<string, unknown>) => {
-  // ---Logic For Search Student---
+const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   const studentSearchFields = [
     'email',
     'name.firstName',
     'name.lastName',
     'presentAddress',
   ];
-  let searchTerm = '';
-  if (queries?.searchTerm) {
-    searchTerm = queries?.searchTerm as string;
-  }
 
-  const searchQuery = Student.find({
-    $or: studentSearchFields.map((field) => ({
-      [field]: { $regex: searchTerm, $options: 'i' },
-    })),
-  });
-
-  // ---Logic For Filter Student---
-  const queryObject = { ...queries };
-  const excludedFields = ['searchTerm', 'sortBy', 'limit', 'page', 'fields'];
-  excludedFields.forEach((field) => delete queryObject[field]);
-
-  const filterQuery = searchQuery
-    .find(queryObject)
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
-
-  // ---Logic For Sort Student---
-  let sort = '-createdAt';
-  if (queries?.sortBy) {
-    sort = queries?.sortBy as string;
-  }
-
-  const sortQuery = filterQuery.sort(sort);
-
-  // ---Logic For Limit and Pagination Student Data ---
-  let pageValue = 1;
-  let limitValue = 10;
-  let skipValue = 0;
-  if (queries?.limit) {
-    limitValue = Number(queries?.limit);
-  }
-  if (queries?.page) {
-    pageValue = Number(queries?.page);
-  }
-
-  skipValue = (pageValue - 1) * limitValue;
-
-  const paginateQuery = sortQuery.skip(skipValue);
-  const limitQuery = paginateQuery.limit(limitValue);
-
-  // ------(Optional) field limiting------
-  let fields = '-__v'; // set default fields and using - to exclude version field
-  if (queries?.fields) {
-    fields = (queries?.fields as string).split(',').join(' ');
-  }
-
-  const fieldFilteredQuery = await limitQuery.select(fields);
-
-  // Final Query Result
-  const result = fieldFilteredQuery;
+  // Search, Filter, Sort, Pagination and Field Filtering Using Query Chaining Method
+  const studentQuery = new QueryBuilder(Student.find(), query)
+    .search(studentSearchFields)
+    .filter()
+    .sort()
+    .pagination()
+    .fieldFiltering();
+  const result = await studentQuery.queryModel;
   return result;
 };
 

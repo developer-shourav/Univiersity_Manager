@@ -174,13 +174,11 @@ studentSchema.virtual('fullName').get(function () {
   const firstName = this?.name?.firstName;
   const middleName = this?.name?.middleName;
   const lastName = this?.name?.lastName;
-  if(firstName && middleName && lastName) {
+  if (firstName && middleName && lastName) {
     return `${firstName} ${middleName} ${lastName}`;
-  }
-  else if(firstName && lastName) {
+  } else if (firstName && lastName) {
     return `${firstName} ${lastName}`;
-  }
-  else {
+  } else {
     return '';
   }
 });
