@@ -48,13 +48,21 @@ const getAllStudentsFromDB = async (queries: Record<string, unknown>) => {
 
   const sortQuery =  filterQuery.sort(sort);
 
-  // ---Logic For Limit Student Data ---
+  // ---Logic For Limit and Pagination Student Data ---
+  let pageValue = 1;
   let limitValue = 10;
+  let skipValue = 0;
   if (queries?.limit) {
-    limitValue = parseInt(queries?.limit as string);
+    limitValue = Number(queries?.limit);
+  }
+  if(queries?.page){
+    pageValue = Number(queries?.page);
   }
 
-  const limitQuery = await sortQuery.limit(limitValue);
+  skipValue = (pageValue - 1) * limitValue;
+
+  const paginateQuery =  sortQuery.skip(skipValue);
+  const limitQuery = await paginateQuery.limit(limitValue);
 
   const result = limitQuery;
   return result;
