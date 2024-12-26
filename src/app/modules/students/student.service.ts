@@ -27,7 +27,7 @@ const getAllStudentsFromDB = async (queries: Record<string, unknown>) => {
 
   // ---Logic For Filter Student---
   const queryObject = { ...queries };
-  const excludedFields = ['searchTerm', 'sortBy', 'limit', 'page'];
+  const excludedFields = ['searchTerm', 'sortBy', 'limit', 'page', 'fields'];
   excludedFields.forEach((field) => delete queryObject[field]);
 
   const filterQuery = searchQuery
@@ -46,7 +46,7 @@ const getAllStudentsFromDB = async (queries: Record<string, unknown>) => {
     sort = queries?.sortBy as string;
   }
 
-  const sortQuery =  filterQuery.sort(sort);
+  const sortQuery = filterQuery.sort(sort);
 
   // ---Logic For Limit and Pagination Student Data ---
   let pageValue = 1;
@@ -55,16 +55,25 @@ const getAllStudentsFromDB = async (queries: Record<string, unknown>) => {
   if (queries?.limit) {
     limitValue = Number(queries?.limit);
   }
-  if(queries?.page){
+  if (queries?.page) {
     pageValue = Number(queries?.page);
   }
 
   skipValue = (pageValue - 1) * limitValue;
 
-  const paginateQuery =  sortQuery.skip(skipValue);
-  const limitQuery = await paginateQuery.limit(limitValue);
+  const paginateQuery = sortQuery.skip(skipValue);
+  const limitQuery = paginateQuery.limit(limitValue);
 
-  const result = limitQuery;
+  // ------(Optional) field limiting------
+  let fields = '-__v'; // set default fields and using - to exclude version field
+  if (queries?.fields) {
+    fields = (queries?.fields as string).split(',').join(' ');
+  }
+
+  const fieldFilteredQuery = await limitQuery.select(fields);
+
+  // Final Query Result
+  const result = fieldFilteredQuery;
   return result;
 };
 
