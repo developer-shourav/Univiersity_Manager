@@ -171,7 +171,16 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 
 // -------------Create Mongoose Virtual property ---------
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.middleName ? this.name.middleName : ''} ${this.name.lastName}`;
+  const firstName = this?.name?.firstName;
+  const middleName = this?.name?.middleName;
+  const lastName = this?.name?.lastName;
+  if (firstName && middleName && lastName) {
+    return `${firstName} ${middleName} ${lastName}`;
+  } else if (firstName && lastName) {
+    return `${firstName} ${lastName}`;
+  } else {
+    return '';
+  }
 });
 
 /* --------------- Query Middleware ------------------------- */
