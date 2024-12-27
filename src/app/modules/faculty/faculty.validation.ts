@@ -23,7 +23,6 @@ const createFacultyValidationSchema = z.object({
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
       presentAddress: z.string(),
       permanentAddress: z.string(),
-      admissionSemester: z.string(),
       profileImage: z.string().optional(), // Assuming URLs for profile images
       academicDepartment: z.string(),
     }),
@@ -52,7 +51,6 @@ const updateFacultyValidationSchema = z.object({
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']).optional(),
       presentAddress: z.string().optional(),
       permanentAddress: z.string().optional(),
-      admissionSemester: z.string().optional(),
       profileImage: z.string().optional(), // Assuming URLs for profile images
       academicDepartment: z.string().optional(),
     }),

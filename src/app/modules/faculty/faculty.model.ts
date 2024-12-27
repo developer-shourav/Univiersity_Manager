@@ -34,9 +34,6 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
       unique: true,
       ref: 'user',
     },
-    role: {
-      type: String,
-    },
     designation: {
       type: String,
     },
@@ -140,8 +137,8 @@ facultySchema.pre('aggregate', function (next) {
 });
 
 // Create a custom static method -------------------------
-facultySchema.statics.isUserExists = async function (id: string) {
-  const existingUser = await Faculty.findOne({ id, isDeleted: { $ne: false } });
+facultySchema.statics.isUserExists = async function (id: string, email: string) {
+  const existingUser = await Faculty.findOne({ id, email, isDeleted: { $ne: false } });
   return existingUser;
 };
 
