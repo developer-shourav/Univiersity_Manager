@@ -10,10 +10,12 @@ import { TFaculty } from './faculty.interface';
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   const facultySearchFields = [
     'email',
+    'id',
+    'contactNo',
+    'emergencyContactNo',
     'name.firstName',
     'name.lastName',
-    'designation',
-    'presentAddress',
+    'name.middleName',
   ];
 
   // Search, Filter, Sort, Pagination and Field Filtering Using Query Chaining Method
