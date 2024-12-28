@@ -30,7 +30,7 @@ const getAFaculty = catchAsync(async (req, res) => {
 
 /* ----------------------Update Single Faculty----------------- */
 const updateAFaculty = catchAsync(async (req, res) => {
-  // 1. Will Call service function to get the student using id
+  // 1. Will Call service function to get the faculty using id
   const { facultyId } = req.params;
   const { faculty } = req.body;
   const result = await facultyServices.updateAFacultyFromDB(facultyId, faculty);
@@ -44,7 +44,7 @@ const updateAFaculty = catchAsync(async (req, res) => {
 
 /* ----------------------Delete Single Faculty----------------- */
 const deleteAFaculty = catchAsync(async (req, res) => {
-  // 1. Will Call service function to get the student using id
+  // 1. Will Call service function to get the faculty using id
   const { facultyId } = req.params;
   const result = await facultyServices.deleteAFacultyFromDB(facultyId);
 
