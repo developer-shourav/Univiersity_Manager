@@ -31,7 +31,7 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
       type: Schema.Types.ObjectId,
       required: [true, 'User id is required'],
       unique: true,
-      ref: 'User',
+      ref: 'user',
     },
     designation: {
       type: String,
