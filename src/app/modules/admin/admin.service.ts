@@ -3,11 +3,11 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 import QueryBuilder from '../../builder/QueryBuilder';
-import { Faculty } from './faculty.model';
-import { TFaculty } from './faculty.interface';
+import { Admin } from './admin.model';
+import { TAdmin } from './admin.interface';
 
-/* --------Logic For Get All Faculties From Database------ */
-const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
+/* --------Logic For Get All Admins From Database------ */
+const getAllAdminsFromDB = async (query: Record<string, unknown>) => {
   const facultySearchFields = [
     'email',
     'id',
@@ -19,7 +19,7 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   ];
 
   // Search, Filter, Sort, Pagination and Field Filtering Using Query Chaining Method
-  const studentQuery = new QueryBuilder(Faculty.find(), query)
+  const studentQuery = new QueryBuilder(Admin.find(), query)
     .search(facultySearchFields)
     .filter()
     .sort()
@@ -29,18 +29,16 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
-/* --------Logic For Get A Faculty From Database------ */
-const getAFacultyFromDB = async (id: string) => {
+/* --------Logic For Get An Admin From Database------ */
+const getAnAdminFromDB = async (id: string) => {
   // using query
-  const result = await Faculty.findOne({ id })
-    .populate('user')
-    .populate('academicDepartment');
+  const result = await Admin.findOne({ id }).populate('user');
 
   return result;
 };
 
-/* --------Logic For Update A Faculty From Database------ */
-const updateAFacultyFromDB = async (id: string, payload: Partial<TFaculty>) => {
+/* --------Logic For Update An Admin From Database------ */
+const updateAnAdminFromDB = async (id: string, payload: Partial<TAdmin>) => {
   const { name, ...remainingFacultyData } = payload;
 
   const modifiedUpdatedData: Record<string, unknown> = {
@@ -53,36 +51,36 @@ const updateAFacultyFromDB = async (id: string, payload: Partial<TFaculty>) => {
     }
   }
 
-  const result = await Faculty.findOneAndUpdate({ id }, modifiedUpdatedData, {
+  const result = await Admin.findOneAndUpdate({ id }, modifiedUpdatedData, {
     new: true,
     runValidators: true,
   });
   return result;
 };
 
-/* --------Logic For Delete A Faculty------ */
-const deleteAFacultyFromDB = async (id: string) => {
+/* --------Logic For Delete An Admin------ */
+const deleteAnAdminFromDB = async (id: string) => {
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
 
-    const isFacultyExist = await Faculty.findOne({
+    const isFacultyExist = await Admin.findOne({
       id,
       isDeleted: { $eq: true },
     });
     if (!isFacultyExist) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Faculty not found');
+      throw new AppError(httpStatus.BAD_REQUEST, 'Admin not found');
     }
 
-    const deletedFaculty = await Faculty.findOneAndUpdate(
+    const deletedAdmin = await Admin.findOneAndUpdate(
       { id },
       { isDeleted: true },
       { new: true, session },
     );
 
-    if (!deletedFaculty) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete faculty');
+    if (!deletedAdmin) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete Admin');
     }
 
     const deletedUser = await User.findOneAndUpdate(
@@ -98,7 +96,7 @@ const deleteAFacultyFromDB = async (id: string) => {
     await session.commitTransaction();
     await session.endSession();
 
-    return deletedFaculty;
+    return deletedAdmin;
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -106,9 +104,9 @@ const deleteAFacultyFromDB = async (id: string) => {
   }
 };
 
-export const facultyServices = {
-  getAllFacultiesFromDB,
-  getAFacultyFromDB,
-  updateAFacultyFromDB,
-  deleteAFacultyFromDB,
+export const adminServices = {
+  getAllAdminsFromDB,
+  getAnAdminFromDB,
+  updateAnAdminFromDB,
+  deleteAnAdminFromDB,
 };

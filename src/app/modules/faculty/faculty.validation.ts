@@ -7,13 +7,12 @@ const facultyNameValidationSchema = z.object({
   lastName: z.string(),
 });
 
-
 // Define the main Faculty schema
 const createFacultyValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20),
     faculty: z.object({
-    designation: z.string(),
+      designation: z.string(),
       name: facultyNameValidationSchema,
       gender: z.enum(['male', 'female', 'other']),
       dateOfBirth: z.string().optional(),
@@ -36,19 +35,20 @@ const updateFacultyNameValidationSchema = z.object({
   lastName: z.string().optional(),
 });
 
-
 // Define the main Update Faculty schema
 const updateFacultyValidationSchema = z.object({
   body: z.object({
     faculty: z.object({
-    designation: z.string().optional(),
+      designation: z.string().optional(),
       name: updateFacultyNameValidationSchema,
       gender: z.enum(['male', 'female', 'other']).optional(),
       dateOfBirth: z.string().optional(),
       email: z.string().email().optional(),
       contactNo: z.string().optional(),
       emergencyContactNo: z.string().optional(),
-      bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']).optional(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])
+        .optional(),
       presentAddress: z.string().optional(),
       permanentAddress: z.string().optional(),
       profileImage: z.string().optional(), // Assuming URLs for profile images
@@ -57,8 +57,7 @@ const updateFacultyValidationSchema = z.object({
   }),
 });
 
-
 export const facultyValidations = {
-    createFacultyValidationSchema,
-    updateFacultyValidationSchema,
+  createFacultyValidationSchema,
+  updateFacultyValidationSchema,
 };
