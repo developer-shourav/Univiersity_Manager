@@ -42,14 +42,14 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
       required: [true, 'Name is required'],
     },
     gender: {
-        type: String,
-        enum: {
-          values: ['male', 'female', 'other'],
-          message: '{VALUE} is not a valid gender.',
-        },
-        required: [true, 'Gender is required.'],
-        trim: true,
+      type: String,
+      enum: {
+        values: ['male', 'female', 'other'],
+        message: '{VALUE} is not a valid gender.',
       },
+      required: [true, 'Gender is required.'],
+      trim: true,
+    },
     dateOfBirth: { type: Date },
     email: {
       type: String,
@@ -91,17 +91,17 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
 
 // generating full name
 adminSchema.virtual('fullName').get(function () {
-    const firstName = this?.name?.firstName;
-    const middleName = this?.name?.middleName;
-    const lastName = this?.name?.lastName;
-    if (firstName && middleName && lastName) {
-      return `${firstName} ${middleName} ${lastName}`;
-    } else if (firstName && lastName) {
-      return `${firstName} ${lastName}`;
-    } else {
-      return '';
-    }
-  });
+  const firstName = this?.name?.firstName;
+  const middleName = this?.name?.middleName;
+  const lastName = this?.name?.lastName;
+  if (firstName && middleName && lastName) {
+    return `${firstName} ${middleName} ${lastName}`;
+  } else if (firstName && lastName) {
+    return `${firstName} ${lastName}`;
+  } else {
+    return '';
+  }
+});
 
 // filter out deleted documents
 adminSchema.pre('find', function (next) {

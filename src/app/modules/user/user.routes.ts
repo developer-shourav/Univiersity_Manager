@@ -15,16 +15,17 @@ router.post(
 );
 
 // -----------Create A Faculty
-router.post('/create-faculty',
-validateRequest(facultyValidations.createFacultyValidationSchema),
-UserControllers.createFaculty,
+router.post(
+  '/create-faculty',
+  validateRequest(facultyValidations.createFacultyValidationSchema),
+  UserControllers.createFaculty,
 );
 
 // -----------Create An Admin
-router.post('/create-admin',
-validateRequest(AdminValidations.createAdminValidationSchema),
-UserControllers.createAdmin,
+router.post(
+  '/create-admin',
+  validateRequest(AdminValidations.createAdminValidationSchema),
+  UserControllers.createAdmin,
 );
-
 
 export const UserRoutes = router;

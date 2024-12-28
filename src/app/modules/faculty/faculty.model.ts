@@ -19,8 +19,6 @@ const facultyNameSchema = new Schema<TFacultyName>({
   },
 });
 
-
-
 const facultySchema = new Schema<TFaculty, FacultyModel>(
   {
     id: {
@@ -94,7 +92,6 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
       type: Boolean,
       default: false,
     },
-    
   },
   {
     toJSON: {

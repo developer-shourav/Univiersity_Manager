@@ -5,7 +5,11 @@ import { TStudent } from '../students/student.interface';
 import { Student } from '../students/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-import { generateAdminId, generateFacultyId, generateStudentId } from './user.utiles';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from './user.utiles';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
@@ -69,7 +73,6 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   }
 };
 
-
 /* --------Logic For Create an Faculty------ */
 const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   // Create an user object
@@ -89,7 +92,6 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   if (!academicDepartment) {
     throw new AppError(400, 'Academic Department not found');
   }
-
 
   const session = await mongoose.startSession();
 
@@ -126,7 +128,6 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   }
 };
 
-
 /* --------Logic For Create An Admin------ */
 const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   // Create an user object
@@ -137,8 +138,6 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
 
   // ----------Set Admin role----------
   userData.role = 'admin';
-
-
 
   const session = await mongoose.startSession();
 

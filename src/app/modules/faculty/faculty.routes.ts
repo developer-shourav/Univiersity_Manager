@@ -3,9 +3,7 @@ import { FacultiesControllers } from './faculty.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { facultyValidations } from './faculty.validation';
 
-
 const router = express.Router();
-
 
 /* -------Get All Faculty */
 router.get('/', FacultiesControllers.getAllFaculties);

@@ -36,7 +36,6 @@ const getAFacultyFromDB = async (id: string) => {
     .populate('user')
     .populate('academicDepartment');
 
-
   return result;
 };
 
