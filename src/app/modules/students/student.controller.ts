@@ -18,8 +18,8 @@ const getAllStudent = catchAsync(async (req, res) => {
 /* ----------------------Get Single Student----------------- */
 const getAStudent = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the student using id
-  const { studentId } = req.params;
-  const result = await studentServices.getAStudentFromDB(studentId);
+  const { id } = req.params;
+  const result = await studentServices.getAStudentFromDB(id);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
@@ -31,9 +31,9 @@ const getAStudent = catchAsync(async (req, res) => {
 /* ----------------------Update Single Student----------------- */
 const updateAStudent = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the student using id
-  const { studentId } = req.params;
+  const { id } = req.params;
   const { student } = req.body;
-  const result = await studentServices.updateAStudentFromDB(studentId, student);
+  const result = await studentServices.updateAStudentFromDB(id, student);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
@@ -45,8 +45,8 @@ const updateAStudent = catchAsync(async (req, res) => {
 /* ----------------------Delete Single Student----------------- */
 const deleteAStudent = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the student using id
-  const { studentId } = req.params;
-  const result = await studentServices.deleteAStudentFromDB(studentId);
+  const { id } = req.params;
+  const result = await studentServices.deleteAStudentFromDB(id);
 
   // 2. Send Response to the frontend
   sendResponse(res, {

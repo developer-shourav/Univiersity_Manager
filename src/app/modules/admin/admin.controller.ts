@@ -18,8 +18,8 @@ const getAllAdmins = catchAsync(async (req, res) => {
 /* ----------------------Get Single Admin----------------- */
 const getAnAdmin = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the Admin using id
-  const { adminId } = req.params;
-  const result = await adminServices.getAnAdminFromDB(adminId);
+  const { id } = req.params;
+  const result = await adminServices.getAnAdminFromDB(id);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
@@ -31,9 +31,9 @@ const getAnAdmin = catchAsync(async (req, res) => {
 /* ----------------------Update Single Admin----------------- */
 const updateAnAdmin = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the Admin using id
-  const { adminId } = req.params;
+  const { id } = req.params;
   const { admin } = req.body;
-  const result = await adminServices.updateAnAdminFromDB(adminId, admin);
+  const result = await adminServices.updateAnAdminFromDB(id, admin);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
@@ -45,8 +45,8 @@ const updateAnAdmin = catchAsync(async (req, res) => {
 /* ----------------------Delete Single Admin----------------- */
 const deleteAnAdmin = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the Admin using id
-  const { adminId } = req.params;
-  const result = await adminServices.deleteAnAdminFromDB(adminId);
+  const { id } = req.params;
+  const result = await adminServices.deleteAnAdminFromDB(id);
 
   // 2. Send Response to the frontend
   sendResponse(res, {

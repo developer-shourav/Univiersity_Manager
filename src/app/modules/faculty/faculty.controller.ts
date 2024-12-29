@@ -18,8 +18,8 @@ const getAllFaculties = catchAsync(async (req, res) => {
 /* ----------------------Get Single Faculty----------------- */
 const getAFaculty = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the student using id
-  const { facultyId } = req.params;
-  const result = await facultyServices.getAFacultyFromDB(facultyId);
+  const { id } = req.params;
+  const result = await facultyServices.getAFacultyFromDB(id);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
@@ -31,9 +31,9 @@ const getAFaculty = catchAsync(async (req, res) => {
 /* ----------------------Update Single Faculty----------------- */
 const updateAFaculty = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the faculty using id
-  const { facultyId } = req.params;
+  const { id } = req.params;
   const { faculty } = req.body;
-  const result = await facultyServices.updateAFacultyFromDB(facultyId, faculty);
+  const result = await facultyServices.updateAFacultyFromDB(id, faculty);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
