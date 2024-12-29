@@ -10,16 +10,16 @@ const router = express.Router();
 router.get('/', AdminControllers.getAllAdmins);
 
 /* --------Get An Admin */
-router.get('/:adminId', AdminControllers.getAnAdmin);
+router.get('/:id', AdminControllers.getAnAdmin);
 
 /* --------Update An Admin */
 router.patch(
-  '/:adminId',
+  '/:id',
   validateRequest(AdminValidations.updateAdminValidationSchema),
   AdminControllers.updateAnAdmin,
 );
 
 /* --------Delete An Admin */
-router.delete('/:adminId', AdminControllers.deleteAnAdmin);
+router.delete('/:id', AdminControllers.deleteAnAdmin);
 
 export const AdminRoutes = router;

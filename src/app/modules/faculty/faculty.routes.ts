@@ -9,16 +9,16 @@ const router = express.Router();
 router.get('/', FacultiesControllers.getAllFaculties);
 
 /* --------Get A Faculty */
-router.get('/:facultyId', FacultiesControllers.getAFaculty);
+router.get('/:id', FacultiesControllers.getAFaculty);
 
 /* --------Update A Faculty */
 router.patch(
-  '/:facultyId',
+  '/:id',
   validateRequest(facultyValidations.updateFacultyValidationSchema),
   FacultiesControllers.updateAFaculty,
 );
 
 /* --------Delete A Faculty */
-router.delete('/:facultyId', FacultiesControllers.deleteAFaculty);
+router.delete('/:id', FacultiesControllers.deleteAFaculty);
 
 export const FacultyRoutes = router;
