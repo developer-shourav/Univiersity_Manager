@@ -40,11 +40,10 @@ const getACourse = catchAsync(async (req, res) => {
 });
 
 /* ----------------------Update Single Course----------------- */
-/* const updateAnAdmin = catchAsync(async (req, res) => {
+const updateCourse = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the Course using id
   const { id } = req.params;
-  const { admin } = req.body;
-  const result = await adminServices.updateAnAdminFromDB(id, admin);
+  const result = await CourseServices.updateACourseIntoDB(id, req.body);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
@@ -52,7 +51,6 @@ const getACourse = catchAsync(async (req, res) => {
     data: result,
   });
 });
- */
 
 /* ----------------------Delete Single Course----------------- */
 const deleteACourse = catchAsync(async (req, res) => {
@@ -71,5 +69,6 @@ export const CourseControllers = {
   createACourse,
   getAllCourses,
   getACourse,
+  updateCourse,
   deleteACourse,
 };

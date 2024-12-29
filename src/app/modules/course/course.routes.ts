@@ -18,6 +18,13 @@ router.get('/', CourseControllers.getAllCourses);
 /* ------------Get A Course ---------- */
 router.get('/:id', CourseControllers.getACourse);
 
+/* ------------Update A Course ---------- */
+router.patch(
+  '/:id',
+  validateRequest(CourseValidations.updateCourseValidationSchema),
+  CourseControllers.updateCourse,
+);
+
 /* ------------Delete A Course ---------- */
 router.delete('/:id', CourseControllers.deleteACourse);
 
