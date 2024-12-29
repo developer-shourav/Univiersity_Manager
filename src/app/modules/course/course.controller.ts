@@ -15,9 +15,9 @@ const createACourse = catchAsync(async (req, res) => {
 
 /* ----------------------Get All Courses---------------- */
 const getAllCourses = catchAsync(async (req, res) => {
-  // const query = req.query;
+  const query = req.query;
   // 1. Will call service function to get all Courses
-  const result = await CourseServices.getAllCoursesFromDB();
+  const result = await CourseServices.getAllCoursesFromDB(query);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
@@ -67,7 +67,7 @@ const deleteACourse = catchAsync(async (req, res) => {
   });
 });
 
-export const AdminControllers = {
+export const CourseControllers = {
   createACourse,
   getAllCourses,
   getACourse,
