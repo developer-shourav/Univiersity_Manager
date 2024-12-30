@@ -67,6 +67,21 @@ const assignFacultiesWithCourse = catchAsync(async (req, res) => {
   });
 });
 
+/* ----------------------Remove Faculties From Course----------------- */
+const removeFacultiesFromCourse = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+  const { faculties } = req.body;
+  const result = await CourseServices.removeFacultiesFromCourseIntoDB(
+    courseId,
+    faculties,
+  );
+
+  sendResponse(res, {
+    message: 'Course removed from faculty successfully',
+    data: result,
+  });
+});
+
 /* ----------------------Delete Single Course----------------- */
 const deleteACourse = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the Course using id
@@ -86,5 +101,6 @@ export const CourseControllers = {
   getACourse,
   updateCourse,
   assignFacultiesWithCourse,
+  removeFacultiesFromCourse,
   deleteACourse,
 };

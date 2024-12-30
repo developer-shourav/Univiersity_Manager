@@ -28,8 +28,15 @@ router.patch(
 /* ------------- Assign Faculties into course----------- */
 router.put(
   '/:courseId/assign-faculties',
-  validateRequest(CourseValidations.assignFacultiesWithCourseValidationSchema),
+  validateRequest(CourseValidations.facultiesWithCourseValidationSchema),
   CourseControllers.assignFacultiesWithCourse,
+);
+
+/* ------------- Remove Faculties from course----------- */
+router.delete(
+  '/:courseId/remove-faculties',
+  validateRequest(CourseValidations.facultiesWithCourseValidationSchema),
+  CourseControllers.removeFacultiesFromCourse,
 );
 /* ------------Delete A Course ---------- */
 router.delete('/:id', CourseControllers.deleteACourse);
