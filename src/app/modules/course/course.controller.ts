@@ -52,6 +52,21 @@ const updateCourse = catchAsync(async (req, res) => {
   });
 });
 
+/* ----------------------Assign Faculties into Course----------------- */
+const assignFacultiesWithCourse = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+  const { faculties } = req.body;
+  const result = await CourseServices.assignFacultiesWithCourseIntoDB(
+    courseId,
+    faculties,
+  );
+
+  sendResponse(res, {
+    message: 'Course Assign to faculty successfully',
+    data: result,
+  });
+});
+
 /* ----------------------Delete Single Course----------------- */
 const deleteACourse = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the Course using id
@@ -70,5 +85,6 @@ export const CourseControllers = {
   getAllCourses,
   getACourse,
   updateCourse,
+  assignFacultiesWithCourse,
   deleteACourse,
 };
