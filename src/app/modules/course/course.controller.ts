@@ -40,11 +40,10 @@ const getACourse = catchAsync(async (req, res) => {
 });
 
 /* ----------------------Update Single Course----------------- */
-/* const updateAnAdmin = catchAsync(async (req, res) => {
+const updateCourse = catchAsync(async (req, res) => {
   // 1. Will Call service function to get the Course using id
   const { id } = req.params;
-  const { admin } = req.body;
-  const result = await adminServices.updateAnAdminFromDB(id, admin);
+  const result = await CourseServices.updateACourseIntoDB(id, req.body);
 
   // 2. Send Response to the frontend
   sendResponse(res, {
@@ -52,7 +51,36 @@ const getACourse = catchAsync(async (req, res) => {
     data: result,
   });
 });
- */
+
+/* ----------------------Assign Faculties into Course----------------- */
+const assignFacultiesWithCourse = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+  const { faculties } = req.body;
+  const result = await CourseServices.assignFacultiesWithCourseIntoDB(
+    courseId,
+    faculties,
+  );
+
+  sendResponse(res, {
+    message: 'Course Assign to faculty successfully',
+    data: result,
+  });
+});
+
+/* ----------------------Remove Faculties From Course----------------- */
+const removeFacultiesFromCourse = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+  const { faculties } = req.body;
+  const result = await CourseServices.removeFacultiesFromCourseIntoDB(
+    courseId,
+    faculties,
+  );
+
+  sendResponse(res, {
+    message: 'Course removed from faculty successfully',
+    data: result,
+  });
+});
 
 /* ----------------------Delete Single Course----------------- */
 const deleteACourse = catchAsync(async (req, res) => {
@@ -71,5 +99,8 @@ export const CourseControllers = {
   createACourse,
   getAllCourses,
   getACourse,
+  updateCourse,
+  assignFacultiesWithCourse,
+  removeFacultiesFromCourse,
   deleteACourse,
 };
