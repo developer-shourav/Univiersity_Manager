@@ -1,0 +1,54 @@
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
+import { TSemesterRegistration } from './semesterRegistration.interface';
+import { SemesterRegistration } from './semesterRegistration.model';
+
+/* --------------Create a Semester Registration into Database---------- */
+const createSemesterRegistrationIntoDB = async (
+  payload: TSemesterRegistration,
+) => {
+  const result = await SemesterRegistration.create(payload);
+  return result;
+};
+
+/* --------------Get all Semester Registrations from Database---------- */
+const getAllSemesterRegistrationsFromDB = async () => {
+  const result = await SemesterRegistration.find();
+
+  return result;
+};
+
+/* --------------Get A Semester Registration from Database---------- */
+const getASemesterRegistrationFromDB = async (id: string) => {
+  const result = await SemesterRegistration.findById({ _id: id });
+  if (!result) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Semester Registration Not Found !!',
+    );
+  }
+
+  return result;
+};
+
+/* --------------Update A Semester Registration ---------- */
+const updateASemesterRegistrationIntoDB = async (
+  id: string,
+  payload: Partial<TSemesterRegistration>,
+) => {
+  const result = await SemesterRegistration.findOneAndUpdate(
+    { _id: id },
+    payload,
+    {
+      new: true,
+    },
+  );
+  return result;
+};
+
+export const SemesterRegistrationServices = {
+  createSemesterRegistrationIntoDB,
+  getAllSemesterRegistrationsFromDB,
+  getASemesterRegistrationFromDB,
+  updateASemesterRegistrationIntoDB,
+};
