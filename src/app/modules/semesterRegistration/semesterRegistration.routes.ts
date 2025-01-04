@@ -1,30 +1,32 @@
 import { Router } from 'express';
 import validateRequest from '../../middlewares/validateRequest';
-import { academicSemesterValidations } from './semesterRegistration.validation';
-import { AcademicSemesterControllers } from './semesterRegistration.controller';
+import { SemesterRegistrationValidations } from './semesterRegistration.validation';
+import { SemesterRegistrationControllers } from './semesterRegistration.controller';
 
 const router = Router();
 
-/* ------------Create a Semester---------- */
+/* ------------Create a Semester Registration---------- */
 router.post(
-  '/create-academic-semester',
-  validateRequest(academicSemesterValidations.createAcademicValidationSchema),
-  AcademicSemesterControllers.createAcademicSemester,
+  '/create-semester-registration',
+  validateRequest(
+    SemesterRegistrationValidations.createSemesterRegistrationValidationSchema,
+  ),
+  SemesterRegistrationControllers.createSemesterRegistration,
 );
 
-/* ------------Get All Academic Semester ---------- */
-router.get('/', AcademicSemesterControllers.getAcademicSemesters);
+/* ------------Get All Semester Registrations ---------- */
+router.get('/', SemesterRegistrationControllers.getSemesterRegistrations);
 
-/* ------------Get an Academic Semester ---------- */
-router.get('/:id', AcademicSemesterControllers.getAnAcademicSemester);
+/* ------------Get a Semester Registration---------- */
+router.get('/:id', SemesterRegistrationControllers.getASemesterRegistration);
 
-/* ------------Update an Academic Semester ---------- */
+/* ------------Update A Semester Registration ---------- */
 router.patch(
   '/:id',
   validateRequest(
-    academicSemesterValidations.updateAcademicSemesterValidationSchema,
+    SemesterRegistrationValidations.createSemesterRegistrationValidationSchema,
   ),
-  AcademicSemesterControllers.updateAcademicSemester,
+  SemesterRegistrationControllers.updateSemesterRegistration,
 );
 
-export const AcademicSemesterRoutes = router;
+export const SemesterRegistrationRoutes = router;

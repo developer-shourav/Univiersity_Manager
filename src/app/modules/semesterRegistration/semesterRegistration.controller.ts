@@ -1,33 +1,36 @@
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { AcademicSemesterServices } from './semesterRegistration.service';
+import { SemesterRegistrationServices } from './semesterRegistration.service';
 
-/* ----------------------Create An Academic Semester ----------------- */
-const createAcademicSemester = catchAsync(async (req, res) => {
-  const result = await AcademicSemesterServices.createAcademicSemesterIntoDB(
-    req.body,
-  );
+/* ----------------------Create A Semester Registration ----------------- */
+const createSemesterRegistration = catchAsync(async (req, res) => {
+  const result =
+    await SemesterRegistrationServices.createSemesterRegistrationIntoDB(
+      req.body,
+    );
 
   sendResponse(res, {
-    message: 'Academic Semester is created successfully',
+    message: 'Semester Registration is created successfully',
     data: result,
   });
 });
 
-/* ----------------------Get All Academic Semester----------------- */
-const getAcademicSemesters = catchAsync(async (req, res) => {
-  const result = await AcademicSemesterServices.getAllAcademicSemestersFromDB();
+/* ----------------------Get All Semester Registrations----------------- */
+const getSemesterRegistrations = catchAsync(async (req, res) => {
+  const result =
+    await SemesterRegistrationServices.getAllSemesterRegistrationsFromDB();
 
   sendResponse(res, {
-    message: 'Academic Semesters retrieved successfully',
+    message: 'Semester Registrations retrieved successfully',
     data: result,
   });
 });
 
-/* ----------------------Get An Academic Semester----------------- */
-const getAnAcademicSemester = catchAsync(async (req, res) => {
+/* ----------------------Get A Semester Registration----------------- */
+const getASemesterRegistration = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await AcademicSemesterServices.getAnAcademicSemesterFromDB(id);
+  const result =
+    await SemesterRegistrationServices.getASemesterRegistrationFromDB(id);
 
   sendResponse(res, {
     message: 'Academic Semester retrieved successfully',
@@ -35,24 +38,25 @@ const getAnAcademicSemester = catchAsync(async (req, res) => {
   });
 });
 
-/* ----------------------Update An Academic Semester----------------- */
+/* ----------------------Update A Semester Registration ----------------- */
 
-const updateAcademicSemester = catchAsync(async (req, res) => {
+const updateSemesterRegistration = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await AcademicSemesterServices.updateAcademicSemesterIntoDB(
-    id,
-    req.body,
-  );
+  const result =
+    await SemesterRegistrationServices.updateASemesterRegistrationIntoDB(
+      id,
+      req.body,
+    );
 
   sendResponse(res, {
-    message: 'Academic Semester Update successfully',
+    message: 'Semester Registration Update successfully',
     data: result,
   });
 });
 
-export const AcademicSemesterControllers = {
-  createAcademicSemester,
-  getAcademicSemesters,
-  getAnAcademicSemester,
-  updateAcademicSemester,
+export const SemesterRegistrationControllers = {
+  createSemesterRegistration,
+  getSemesterRegistrations,
+  getASemesterRegistration,
+  updateSemesterRegistration,
 };
