@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { AuthRoutes } from '../modules/Auth/auth.routes';
 import { UserRoutes } from '../modules/user/user.routes';
 import { AdminRoutes } from '../modules/admin/admin.routes';
 import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFaculty.routes';
@@ -14,6 +15,10 @@ const router = Router();
 
 /* ------- Application Parent Routes---------- */
 const moduleRoutes = [
+  {
+    path: '/auth',
+    route: AuthRoutes,
+  },
   {
     path: '/users',
     route: UserRoutes,
