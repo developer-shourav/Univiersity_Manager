@@ -2,11 +2,12 @@ import express from 'express';
 import { FacultiesControllers } from './faculty.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { facultyValidations } from './faculty.validation';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
 /* -------Get All Faculty */
-router.get('/', FacultiesControllers.getAllFaculties);
+router.get('/', auth(), FacultiesControllers.getAllFaculties);
 
 /* --------Get A Faculty */
 router.get('/:id', FacultiesControllers.getAFaculty);
