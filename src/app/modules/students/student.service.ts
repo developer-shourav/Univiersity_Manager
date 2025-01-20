@@ -16,7 +16,7 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   ];
 
   // Search, Filter, Sort, Pagination and Field Filtering Using Query Chaining Method
-  const studentQuery = new QueryBuilder(Student.find(), query)
+  const studentQuery = new QueryBuilder(Student.find().populate('user'), query)
     .search(studentSearchFields)
     .filter()
     .sort()
