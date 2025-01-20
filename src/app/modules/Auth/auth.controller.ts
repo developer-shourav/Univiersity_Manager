@@ -18,9 +18,11 @@ const loginUser = catchAsync(async (req, res) => {
 const changePassword = catchAsync(async (req, res) => {
   // 1. Will call service function to get all Faculties
 
-  const user = req.user;
   const { ...passwordData } = req.body;
-  const result = await AuthServices.changePasswordIntoDB(user, passwordData);
+  const result = await AuthServices.changePasswordIntoDB(
+    req.user,
+    passwordData,
+  );
 
   // 2. Send Response to the frontend
   sendResponse(res, {
