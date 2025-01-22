@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { TUserRole } from '../modules/user/user.interface';
+import { User } from '../modules/user/user.model';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -14,31 +15,56 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
     /* -------Checking the token validity */
-    jwt.verify(
+    const decoded = jwt.verify(
       TOKEN,
       config.jwt_access_secret as string,
-      function (err, decoded) {
-        // err
-        if (err) {
-          throw new AppError(httpStatus.UNAUTHORIZED, 'Unauthorized!');
-        }
+    ) as JwtPayload;
 
-        const role = (decoded as JwtPayload).role;
+    const { role, userId, iat } = decoded;
 
-        /* -------Checking the user Role validity for the request */
-        if (requiredRoles && !requiredRoles.includes(role)) {
-          throw new AppError(
-            httpStatus.UNAUTHORIZED,
-            'Unauthorized! Your are not permitted.',
-          );
-        }
+    // ----------Check if the user is exist
+    const user = await User.isUserExistByCustomId(userId);
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+    }
 
-        // decoded
-        req.user = decoded as JwtPayload;
+    // --------- checking if the user already deleted
+    const isUserDeleted = user?.isDeleted;
+    if (isUserDeleted) {
+      throw new AppError(httpStatus.NOT_FOUND, 'This user is deleted!');
+    }
 
-        next();
-      },
-    );
+    // --------- checking if the user is Blocked
+    const userStatus = user?.status;
+    if (userStatus === 'blocked') {
+      throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked!');
+    }
+
+    // ------- checking if the token issued before password change
+    if (
+      user?.passwordChangedAt &&
+      User.isJwtTokenIssuedBeforePasswordChanged(
+        user?.passwordChangedAt,
+        iat as number,
+      )
+    ) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'Unauthorized!! Your are not permitted💀',
+      );
+    }
+
+    /* -------Checking the user Role validity for the request */
+    if (requiredRoles && !requiredRoles.includes(role)) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'Unauthorized! Your are not permitted.',
+      );
+    }
+
+    // decoded
+    req.user = decoded as JwtPayload;
+    next();
   });
 };
 
