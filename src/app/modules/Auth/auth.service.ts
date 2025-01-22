@@ -92,6 +92,7 @@ const changePasswordIntoDB = async (
     {
       password: newHashedPassword,
       needPasswordChange: false,
+      passwordChangedAt: new Date(),
     },
   );
 
