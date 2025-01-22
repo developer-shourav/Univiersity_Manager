@@ -69,7 +69,13 @@ const changePasswordIntoDB = async (
   // ----------Checking if the password Match or Not
 
   if (!(await User.isPasswordMatched(payload?.oldPassword, user?.password))) {
-    throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched!');
+    throw new AppError(httpStatus.FORBIDDEN, 'Wrong Old Password!');
+  }
+
+  // ----------Checking if the Old Password and the New update password are same
+
+  if (payload?.oldPassword === payload?.newPassword) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Create Unique New Password');
   }
 
   // ----------Hash the new password
@@ -85,6 +91,7 @@ const changePasswordIntoDB = async (
     },
     {
       password: newHashedPassword,
+      needPasswordChange: false,
     },
   );
 

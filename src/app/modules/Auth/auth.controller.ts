@@ -26,7 +26,7 @@ const changePassword = catchAsync(async (req, res) => {
 
   // 2. Send Response to the frontend
   sendResponse(res, {
-    message: 'Password Changed successfully!',
+    message: 'Password Update successfully!',
     data: result,
   });
 });
