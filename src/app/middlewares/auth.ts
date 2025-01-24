@@ -42,9 +42,9 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
     // ------- checking if the token issued before password change
     if (
-      user?.passwordChangedAt &&
+      user.passwordChangedAt &&
       User.isJwtTokenIssuedBeforePasswordChanged(
-        user?.passwordChangedAt,
+        user.passwordChangedAt,
         iat as number,
       )
     ) {
