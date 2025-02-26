@@ -1,3 +1,4 @@
+import config from '../../config';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
@@ -6,11 +7,22 @@ import { AuthServices } from './auth.service';
 const loginUser = catchAsync(async (req, res) => {
   // 1. Will call service function to get all Faculties
   const result = await AuthServices.logInUser(req.body);
+  // --- Get refresh token form result
+  const { refreshToken, accessToken, needsPasswordChange } = result;
+
+  // --- Save Refresh token into cookies
+  res.cookie('refreshToken', refreshToken, {
+    secure: config.NODE_ENV === 'production',
+    httpOnly: true,
+  });
 
   // 2. Send Response to the frontend
   sendResponse(res, {
     message: 'User is logged in successfully!',
-    data: result,
+    data: {
+      accessToken,
+      needsPasswordChange,
+    },
   });
 });
 
@@ -31,7 +43,21 @@ const changePassword = catchAsync(async (req, res) => {
   });
 });
 
+/* ------------------ Get Access  Token------------------ */
+const refreshToken = catchAsync(async (req, res) => {
+  const { refreshToken } = req.cookies;
+  // 1. Will call service function to get refresh token
+  const result = await AuthServices.refreshToken(refreshToken);
+
+  // 2. Send Response to the frontend
+  sendResponse(res, {
+    message: 'Access token is retrieved successfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   loginUser,
   changePassword,
+  refreshToken,
 };

@@ -75,7 +75,7 @@ userSchema.statics.isPasswordMatched = async function (
 };
 
 // ----------Check if the Token issued before password changed
-userSchema.statics.isJwtTokenIssuedBeforePasswordChanged = async function (
+userSchema.statics.isJwtTokenIssuedBeforePasswordChanged = function (
   passwordChangedTimestamp: Date,
   jwtIssuedTimestamp: number,
 ) {

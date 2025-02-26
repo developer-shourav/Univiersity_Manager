@@ -8,6 +8,7 @@ const getAllFaculties = catchAsync(async (req, res) => {
   // 1. Will call service function to get all Faculties
   const result = await facultyServices.getAllFacultiesFromDB(query);
 
+  console.log(req.cookies);
   // 2. Send Response to the frontend
   sendResponse(res, {
     message: 'All faculties are retrieved successfully',
