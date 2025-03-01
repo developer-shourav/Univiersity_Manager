@@ -171,8 +171,47 @@ const refreshToken = async (TOKEN: string) => {
   };
 };
 
+const forgetPasswordIntoDB = async (userId: string) => {
+  // ----------Check if the user is exist
+  const user = await User.isUserExistByCustomId(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+
+  // --------- checking if the user already deleted
+  const isUserDeleted = user?.isDeleted;
+  if (isUserDeleted) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is deleted!');
+  }
+
+  // --------- checking if the user is Blocked
+  const userStatus = user?.status;
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked!');
+  }
+
+  // ----------Create token 
+    const jwtPayload = {
+      userId: user?.id,
+      role: user?.role,
+    };
+    // --- Create AccessToken
+    const accessToken = createToken(
+      jwtPayload,
+      config.jwt_access_secret as string,
+      '10m',
+    );
+
+  const restUILink = `http://localhost:3000/id=${user?.id}&token=${accessToken}`;
+
+  console.log("🚀 ~ forgetPasswordIntoDB ~ restUILink:", restUILink)
+  
+};
+
+
 export const AuthServices = {
   logInUser,
   changePasswordIntoDB,
   refreshToken,
+  forgetPasswordIntoDB,
 };
