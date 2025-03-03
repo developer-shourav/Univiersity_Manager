@@ -7,6 +7,7 @@ import config from '../../config';
 import bcrypt from 'bcrypt';
 import { createToken } from './auth.utils';
 import jwt from 'jsonwebtoken';
+import { sendEmail } from '../../utils/sendEmail';
 
 const logInUser = async (payload: TLoginUser) => {
   // ----------Check if the user is exist
@@ -190,24 +191,21 @@ const forgetPasswordIntoDB = async (userId: string) => {
     throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked!');
   }
 
-  // ----------Create token 
-    const jwtPayload = {
-      userId: user?.id,
-      role: user?.role,
-    };
-    // --- Create AccessToken
-    const accessToken = createToken(
-      jwtPayload,
-      config.jwt_access_secret as string,
-      '10m',
-    );
+  // ----------Create token
+  const jwtPayload = {
+    userId: user?.id,
+    role: user?.role,
+  };
+  // --- Create AccessToken
+  const resetToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    '10m',
+  );
 
-  const restUILink = `http://localhost:3000/id=${user?.id}&token=${accessToken}`;
-
-  console.log("🚀 ~ forgetPasswordIntoDB ~ restUILink:", restUILink)
-  
+  const restUILink = `http://localhost:3000/id=${user?.id}&token=${resetToken}`;
+  sendEmail();
 };
-
 
 export const AuthServices = {
   logInUser,
