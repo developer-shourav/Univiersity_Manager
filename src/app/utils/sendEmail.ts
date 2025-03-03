@@ -1,20 +1,25 @@
 import nodemailer from 'nodemailer';
-export const sendEmail = async () => {
+import config from '../config';
+
+export const sendEmail = async (mailReceiver: string, resetLink: string) => {
+
   const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
+    host: 'smtp.gmail.com',
     port: 587,
-    secure: false, // true for port 465, false for other ports
+    secure: false, // Use false for 587, true for 465
     auth: {
-      user: 'maddison53@ethereal.email',
-      pass: 'jn7jnAPss4f63QBp6D',
+      user: config.nodemailer_user,
+      pass: config.nodemailer_pass,
     },
   });
 
   await transporter.sendMail({
-    from: '"Maddison Foo Koch 👻" <maddison53@ethereal.email>', // sender address
-    to: 'bar@example.com, baz@example.com', // list of receivers
-    subject: 'Hello ✔', // Subject line
-    text: 'Hello world?', // plain text body
-    html: '<b>Hello world?</b>', // html body
+    from: `"University Manager" <${config.nodemailer_user}>`, 
+    to: mailReceiver, 
+    subject: 'Password Reset Link', 
+    text: 'Email for Password Reset', 
+    html: `<b>Click on the link to reset your password: </b><a href="${resetLink}">${resetLink}</a>`, 
   });
+
+  console.log('Email sent successfully');
 };

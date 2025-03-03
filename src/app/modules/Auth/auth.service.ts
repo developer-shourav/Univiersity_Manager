@@ -203,8 +203,10 @@ const forgetPasswordIntoDB = async (userId: string) => {
     '10m',
   );
 
-  const restUILink = `http://localhost:3000/id=${user?.id}&token=${resetToken}`;
-  sendEmail();
+  const restUILink = `${config.reset_password_ui_link}/id=${user?.id}&token=${resetToken}`;
+
+  /* ---------Send Password Reset Link to the user email address-------- */
+  await sendEmail( user?.email ,restUILink);
 };
 
 export const AuthServices = {
