@@ -26,9 +26,9 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // ----------If Password is not given , use default password----------
   userData.password = password || (config.default_password as string);
 
-  // ----------Set student role----------
+  // ----------Set student role and Email----------
   userData.role = 'student';
-
+  userData.email = payload.email;
   // ----------Find academic semester info----------
   const admissionSemester = await AcademicSemester.findById(
     payload.admissionSemester,
@@ -81,8 +81,9 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   // ----------If Password is not given , use default password----------
   userData.password = password || (config.default_password as string);
 
-  // ----------Set Faculty role----------
+  // ----------Set Faculty role and email----------
   userData.role = 'faculty';
+  userData.email = payload.email;
 
   // ----------Find academic Department info----------
   const academicDepartment = await AcademicDepartment.findById(
@@ -136,8 +137,9 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   // ----------If Password is not given , use default password----------
   userData.password = password || (config.default_password as string);
 
-  // ----------Set Admin role----------
+  // ----------Set Admin role and email----------
   userData.role = 'admin';
+  userData.email = payload.email;
 
   const session = await mongoose.startSession();
 

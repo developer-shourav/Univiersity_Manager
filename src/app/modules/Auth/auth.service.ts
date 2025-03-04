@@ -7,6 +7,7 @@ import config from '../../config';
 import bcrypt from 'bcrypt';
 import { createToken } from './auth.utils';
 import jwt from 'jsonwebtoken';
+import { sendEmail } from '../../utils/sendEmail';
 
 const logInUser = async (payload: TLoginUser) => {
   // ----------Check if the user is exist
@@ -171,8 +172,46 @@ const refreshToken = async (TOKEN: string) => {
   };
 };
 
+const forgetPasswordIntoDB = async (userId: string) => {
+  // ----------Check if the user is exist
+  const user = await User.isUserExistByCustomId(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+
+  // --------- checking if the user already deleted
+  const isUserDeleted = user?.isDeleted;
+  if (isUserDeleted) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is deleted!');
+  }
+
+  // --------- checking if the user is Blocked
+  const userStatus = user?.status;
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked!');
+  }
+
+  // ----------Create token
+  const jwtPayload = {
+    userId: user?.id,
+    role: user?.role,
+  };
+  // --- Create AccessToken
+  const resetToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    '10m',
+  );
+
+  const restUILink = `${config.reset_password_ui_link}/id=${user?.id}&token=${resetToken}`;
+
+  /* ---------Send Password Reset Link to the user email address-------- */
+  await sendEmail( user?.email ,restUILink);
+};
+
 export const AuthServices = {
   logInUser,
   changePasswordIntoDB,
   refreshToken,
+  forgetPasswordIntoDB,
 };
