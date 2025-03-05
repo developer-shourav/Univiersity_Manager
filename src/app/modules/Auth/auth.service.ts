@@ -5,8 +5,7 @@ import { TLoginUser } from './auth.interface';
 import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import bcrypt from 'bcrypt';
-import { createToken } from './auth.utils';
-import jwt from 'jsonwebtoken';
+import { createToken, verifyToken } from './auth.utils';
 import { sendEmail } from '../../utils/sendEmail';
 
 const logInUser = async (payload: TLoginUser) => {
@@ -116,10 +115,7 @@ const changePasswordIntoDB = async (
 
 const refreshToken = async (TOKEN: string) => {
   /* -------Checking the token validity */
-  const decoded = jwt.verify(
-    TOKEN,
-    config.jwt_refresh_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(TOKEN, config.jwt_refresh_secret as string);
 
   const { userId, iat } = decoded;
 
@@ -232,10 +228,7 @@ const resetPasswordIntoDB = async (
   }
 
   /* -------Checking the token validity */
-  const decoded = jwt.verify(
-    TOKEN,
-    config.jwt_access_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(TOKEN, config.jwt_access_secret as string);
 
   // -------- checking the user is permitted to reset the password
   if (decoded.userId !== payload.id) {

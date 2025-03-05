@@ -176,8 +176,24 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   }
 };
 
+/* --------Logic For getting present loggedIn user's info ------ */
+const getMe = async (role: string, userId: string) => {
+  let result = null;
+  if (role === 'student') {
+    result = await Student.findOne({ id: userId });
+  }
+  if (role === 'faculty') {
+    result = await Faculty.findOne({ id: userId });
+  }
+  if (role === 'admin') {
+    result = await Admin.findOne({ id: userId });
+  }
+  return result;
+};
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMe,
 };

@@ -28,9 +28,16 @@ router.post(
 // -----------Create An Admin
 router.post(
   '/create-admin',
-  // auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin),
   validateRequest(AdminValidations.createAdminValidationSchema),
   UserControllers.createAdmin,
+);
+
+// -----------Route to get all kinds of users (Admin, Faculty, Student) own data
+router.get(
+  '/me',
+  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+  UserControllers.getMe,
 );
 
 export const UserRoutes = router;

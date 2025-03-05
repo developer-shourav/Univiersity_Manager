@@ -50,8 +50,23 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 
+/* ----------------------Get Me (Controller for getting present user info)----------------- */
+const getMe = catchAsync(async (req, res) => {
+  const { role, userId } = req.user;
+
+  // will call service function to send this data
+  const result = await UserServices.getMe(role, userId);
+  const userRole = role.charAt(0).toUpperCase() + role.slice(1);
+
+  sendResponse(res, {
+    message: `${userRole} data is fetched successfully`,
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createStudent,
   createFaculty,
   createAdmin,
+  getMe,
 };
