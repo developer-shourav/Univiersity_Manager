@@ -176,17 +176,29 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   }
 };
 
+/* --------Logic For Change Status ------ */
+const changeUserStatusIntoDB = async (
+  id: string,
+  payload: { status: string },
+) => {
+  const result = await User.findByIdAndUpdate(id, payload, { new: true });
+  if (!result) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to change user status');
+  }
+  return result;
+};
+
 /* --------Logic For getting present loggedIn user's info ------ */
 const getMe = async (role: string, userId: string) => {
   let result = null;
   if (role === 'student') {
-    result = await Student.findOne({ id: userId });
+    result = await Student.findOne({ id: userId }).populate('user');
   }
   if (role === 'faculty') {
-    result = await Faculty.findOne({ id: userId });
+    result = await Faculty.findOne({ id: userId }).populate('user');
   }
   if (role === 'admin') {
-    result = await Admin.findOne({ id: userId });
+    result = await Admin.findOne({ id: userId }).populate('user');
   }
   return result;
 };
@@ -195,5 +207,6 @@ export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  changeUserStatusIntoDB,
   getMe,
 };

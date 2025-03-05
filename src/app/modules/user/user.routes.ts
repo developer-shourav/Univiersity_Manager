@@ -6,6 +6,7 @@ import { facultyValidations } from '../faculty/faculty.validation';
 import { AdminValidations } from '../admin/admin.validation';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
+import { userValidation } from './user.validation';
 
 const router = express.Router();
 
@@ -31,6 +32,14 @@ router.post(
   auth(USER_ROLE.admin),
   validateRequest(AdminValidations.createAdminValidationSchema),
   UserControllers.createAdmin,
+);
+
+// -----------Change User Status by Admin
+router.patch(
+  '/change-status/:id',
+  auth(USER_ROLE.admin),
+  validateRequest(userValidation.changeStatusValidationSchema),
+  UserControllers.changeStatus,
 );
 
 // -----------Route to get all kinds of users (Admin, Faculty, Student) own data

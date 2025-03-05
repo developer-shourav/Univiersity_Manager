@@ -50,6 +50,20 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 
+/* ----------------------Change User Status by Admin----------------- */
+const changeStatus = catchAsync(async (req, res) => {
+  const payload = req.body;
+  const id = req.params.id;
+
+  // will call service function to send this data
+  const result = await UserServices.changeUserStatusIntoDB(id, payload);
+
+  sendResponse(res, {
+    message: 'User status is changed successfully',
+    data: result,
+  });
+});
+
 /* ----------------------Get Me (Controller for getting present user info)----------------- */
 const getMe = catchAsync(async (req, res) => {
   const { role, userId } = req.user;
@@ -68,5 +82,6 @@ export const UserControllers = {
   createStudent,
   createFaculty,
   createAdmin,
+  changeStatus,
   getMe,
 };
