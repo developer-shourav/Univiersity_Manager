@@ -5,8 +5,7 @@ import { TLoginUser } from './auth.interface';
 import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import bcrypt from 'bcrypt';
-import { createToken } from './auth.utils';
-import jwt from 'jsonwebtoken';
+import { createToken, verifyToken } from './auth.utils';
 import { sendEmail } from '../../utils/sendEmail';
 
 const logInUser = async (payload: TLoginUser) => {
@@ -116,10 +115,7 @@ const changePasswordIntoDB = async (
 
 const refreshToken = async (TOKEN: string) => {
   /* -------Checking the token validity */
-  const decoded = jwt.verify(
-    TOKEN,
-    config.jwt_refresh_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(TOKEN, config.jwt_refresh_secret as string);
 
   const { userId, iat } = decoded;
 
@@ -206,12 +202,66 @@ const forgetPasswordIntoDB = async (userId: string) => {
   const restUILink = `${config.reset_password_ui_link}/id=${user?.id}&token=${resetToken}`;
 
   /* ---------Send Password Reset Link to the user email address-------- */
-  await sendEmail( user?.email ,restUILink);
+  await sendEmail(user?.email, restUILink);
 };
 
+const resetPasswordIntoDB = async (
+  payload: { id: string; newPassword: string },
+  TOKEN: string,
+) => {
+  // ----------Check if the user is exist
+  const user = await User.isUserExistByCustomId(payload?.id);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+
+  // --------- checking if the user already deleted
+  const isUserDeleted = user?.isDeleted;
+  if (isUserDeleted) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is deleted!');
+  }
+
+  // --------- checking if the user is Blocked
+  const userStatus = user?.status;
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked!');
+  }
+
+  /* -------Checking the token validity */
+  const decoded = verifyToken(TOKEN, config.jwt_access_secret as string);
+
+  // -------- checking the user is permitted to reset the password
+  if (decoded.userId !== payload.id) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'Unauthorized!! Your are not permitted💀',
+    );
+  }
+
+  // ----------Hash the new password
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_round),
+  );
+
+  await User.findOneAndUpdate(
+    {
+      id: decoded.userId,
+      role: decoded.role,
+    },
+    {
+      password: newHashedPassword,
+      needPasswordChange: false,
+      passwordChangedAt: new Date(),
+    },
+  );
+
+  return {};
+};
 export const AuthServices = {
   logInUser,
   changePasswordIntoDB,
   refreshToken,
   forgetPasswordIntoDB,
+  resetPasswordIntoDB,
 };

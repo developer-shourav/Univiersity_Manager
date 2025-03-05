@@ -70,9 +70,28 @@ const forgetPassword = catchAsync(async (req, res) => {
   });
 });
 
+/* ----------------------Reset Password----------------- */
+const resetPassword = catchAsync(async (req, res) => {
+  // 1. Will call service function to get all Faculties
+
+  const resetPasswordInfo = req.body;
+  const token = req.headers?.authorization;
+  const result = await AuthServices.resetPasswordIntoDB(
+    resetPasswordInfo,
+    token as string,
+  );
+
+  // 2. Send Response to the frontend
+  sendResponse(res, {
+    message: 'Password reset successful!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   loginUser,
   changePassword,
   refreshToken,
   forgetPassword,
+  resetPassword,
 };

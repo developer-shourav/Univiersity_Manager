@@ -50,8 +50,38 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 
+/* ----------------------Change User Status by Admin----------------- */
+const changeStatus = catchAsync(async (req, res) => {
+  const payload = req.body;
+  const id = req.params.id;
+
+  // will call service function to send this data
+  const result = await UserServices.changeUserStatusIntoDB(id, payload);
+
+  sendResponse(res, {
+    message: 'User status is changed successfully',
+    data: result,
+  });
+});
+
+/* ----------------------Get Me (Controller for getting present user info)----------------- */
+const getMe = catchAsync(async (req, res) => {
+  const { role, userId } = req.user;
+
+  // will call service function to send this data
+  const result = await UserServices.getMe(role, userId);
+  const userRole = role.charAt(0).toUpperCase() + role.slice(1);
+
+  sendResponse(res, {
+    message: `${userRole} data is fetched successfully`,
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createStudent,
   createFaculty,
   createAdmin,
+  changeStatus,
+  getMe,
 };
