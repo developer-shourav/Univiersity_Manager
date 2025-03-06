@@ -17,6 +17,7 @@ import { Faculty } from '../faculty/faculty.model';
 import { TAdmin } from '../admin/admin.interface';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Admin } from '../admin/admin.model';
+import { hostImageToCloudinary } from '../../utils/hostImageToCloudinary';
 
 /* --------Logic For Create an Student------ */
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
@@ -45,6 +46,9 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     // ----------Set Manually Generated Id
     userData.id = await generateStudentId(admissionSemester);
 
+    // ----------send Image to the cloudinary----------
+    hostImageToCloudinary();
+    
     // ----------Create an user
     const newUser = await User.create([userData], { session });
 
