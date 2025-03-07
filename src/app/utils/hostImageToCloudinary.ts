@@ -2,20 +2,20 @@ import { v2 as cloudinary } from 'cloudinary';
 import config from '../config';
 import multer from 'multer';
 
-export const hostImageToCloudinary = async () => {
-  // Configuration
+export const hostImageToCloudinary = async (imageName: string, imagePath: string) => {
+  // -------------Configuration values for cloudinary
   cloudinary.config({
     cloud_name: config.cloudinary_cloud_name,
     api_key: config.cloudinary_api_key,
     api_secret: config.cloudinary_api_secret,
   });
 
-  // Upload an image
+  // -------------Upload an image to cloudinary
   const uploadResult = await cloudinary.uploader
     .upload(
-      'https://upload.wikimedia.org/wikipedia/commons/7/79/Radha_Krishna_at_Iskcon_Vrindavan.jpg',
+      imagePath,
       {
-        public_id: 'HareKrishna',
+        public_id: imageName,
       },
     )
     .catch((error) => {
@@ -24,6 +24,7 @@ export const hostImageToCloudinary = async () => {
   console.log({ uploadResult });
 };
 
+// -------------Configuration for multer for temporary storage and file management
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, process.cwd() + '/uploads/');
