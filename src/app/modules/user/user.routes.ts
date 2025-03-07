@@ -7,6 +7,8 @@ import { AdminValidations } from '../admin/admin.validation';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
 import { userValidation } from './user.validation';
+import { upload } from '../../utils/hostImageToCloudinary';
+import { formDataToJsonConvertor } from '../../middlewares/formDataToJsonConvertor';
 
 const router = express.Router();
 
@@ -14,6 +16,8 @@ const router = express.Router();
 router.post(
   '/create-student',
   auth(USER_ROLE.admin),
+  upload.single('profileImage'),
+  formDataToJsonConvertor,
   validateRequest(studentValidations.createStudentValidationSchema),
   UserControllers.createStudent,
 );

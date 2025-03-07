@@ -48,7 +48,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 
     // ----------send Image to the cloudinary----------
     hostImageToCloudinary();
-    
+
     // ----------Create an user
     const newUser = await User.create([userData], { session });
 
