@@ -18,9 +18,11 @@ import { TAdmin } from '../admin/admin.interface';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Admin } from '../admin/admin.model';
 import { hostImageToCloudinary } from '../../utils/hostImageToCloudinary';
+import { uniqueImageNameGenerator } from '../../utils/uniqueImageNameGenerator';
 
 /* --------Logic For Create an Student------ */
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createStudentIntoDB = async (password: string, imageFileDetails: any, payload: TStudent) => {
   // Create an user object
   const userData: Partial<TUser> = {};
 
@@ -47,8 +49,13 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     userData.id = await generateStudentId(admissionSemester);
 
     // ----------send Image to the cloudinary----------
-    hostImageToCloudinary();
-    
+    if (imageFileDetails) {
+      // image path name
+      const imagePath = imageFileDetails?.path;
+      const {imageName} = uniqueImageNameGenerator(payload.name, userData.id);
+      await hostImageToCloudinary(imageName, imagePath);
+    }
+
     // ----------Create an user
     const newUser = await User.create([userData], { session });
 
