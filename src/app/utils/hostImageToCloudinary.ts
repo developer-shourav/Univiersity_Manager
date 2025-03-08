@@ -28,7 +28,7 @@ export const hostImageToCloudinary = (imageName: string, imagePath: string) => {
           if (err) {
             console.log(err);
           } else {
-            console.log('File is deleted.');
+            console.log('Image hosted and Local file is deleted successfully.');
           }
         });
       },

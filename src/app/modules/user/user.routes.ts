@@ -26,6 +26,8 @@ router.post(
 router.post(
   '/create-faculty',
   auth(USER_ROLE.admin),
+  upload.single('profileImage'),
+  formDataToJsonConvertor,
   validateRequest(facultyValidations.createFacultyValidationSchema),
   UserControllers.createFaculty,
 );
@@ -34,6 +36,8 @@ router.post(
 router.post(
   '/create-admin',
   auth(USER_ROLE.admin),
+  upload.single('profileImage'),
+  formDataToJsonConvertor,
   validateRequest(AdminValidations.createAdminValidationSchema),
   UserControllers.createAdmin,
 );

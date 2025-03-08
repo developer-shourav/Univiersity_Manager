@@ -20,7 +20,7 @@ export const createAdminValidationSchema = z.object({
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
       presentAddress: z.string(),
       permanentAddress: z.string(),
-      profileImg: z.string(),
+      //profileImg: z.string(),
     }),
   }),
 });

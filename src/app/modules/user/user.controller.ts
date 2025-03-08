@@ -23,11 +23,13 @@ const createStudent = catchAsync(async (req, res) => {
 
 /* ----------------------Create A Faculty----------------- */
 const createFaculty = catchAsync(async (req, res) => {
+  const imageFileDetails = req.file;
   const { password, faculty: createNewFacultyData } = req.body;
 
   // will call service function to send this data
   const result = await UserServices.createFacultyIntoDB(
     password,
+    imageFileDetails,
     createNewFacultyData,
   );
 
@@ -39,11 +41,13 @@ const createFaculty = catchAsync(async (req, res) => {
 
 /* ----------------------Create An Admin----------------- */
 const createAdmin = catchAsync(async (req, res) => {
+  const imageFileDetails = req.file;
   const { password, admin: createNewAdminData } = req.body;
 
   // will call service function to send this data
   const result = await UserServices.createAdminIntoDB(
     password,
+    imageFileDetails,
     createNewAdminData,
   );
 
