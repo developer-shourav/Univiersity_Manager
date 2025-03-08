@@ -22,7 +22,11 @@ import { uniqueImageNameGenerator } from '../../utils/uniqueImageNameGenerator';
 
 /* --------Logic For Create an Student------ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createStudentIntoDB = async (password: string, imageFileDetails: any, payload: TStudent) => {
+const createStudentIntoDB = async (
+  password: string,
+  imageFileDetails: any,
+  payload: TStudent,
+) => {
   // Create an user object
   const userData: Partial<TUser> = {};
 
@@ -49,12 +53,12 @@ const createStudentIntoDB = async (password: string, imageFileDetails: any, payl
     userData.id = await generateStudentId(admissionSemester);
 
     // ----------send Image to the cloudinary----------
-    if (imageFileDetails) {
-      // image path name
-      const imagePath = imageFileDetails?.path;
-      const {imageName} = uniqueImageNameGenerator(payload.name, userData.id);
-      await hostImageToCloudinary(imageName, imagePath);
-    }
+    const imagePath = imageFileDetails?.path;
+    const { imageName } = uniqueImageNameGenerator(payload.name, userData.id);
+    const { secure_url }: unknown = await hostImageToCloudinary(
+      imageName,
+      imagePath,
+    );
 
     // ----------Create an user
     const newUser = await User.create([userData], { session });
@@ -66,6 +70,7 @@ const createStudentIntoDB = async (password: string, imageFileDetails: any, payl
     // set id,  _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; // Reference Id
+    payload.profileImage = secure_url;
 
     const newStudent = await Student.create([payload], { session });
 
