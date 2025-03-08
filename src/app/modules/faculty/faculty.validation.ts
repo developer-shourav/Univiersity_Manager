@@ -22,7 +22,7 @@ const createFacultyValidationSchema = z.object({
       bloodGroup: z.enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']),
       presentAddress: z.string(),
       permanentAddress: z.string(),
-      profileImage: z.string().optional(), // Assuming URLs for profile images
+      // profileImage: z.string().optional(), // Assuming URLs for profile images
       academicDepartment: z.string(),
     }),
   }),
