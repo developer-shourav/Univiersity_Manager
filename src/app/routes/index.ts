@@ -10,7 +10,7 @@ import { AcademicSemesterRoutes } from '../modules/academicSemester/academicSeme
 import { CourseRoutes } from '../modules/course/course.routes';
 import { SemesterRegistrationRoutes } from '../modules/semesterRegistration/semesterRegistration.routes';
 import { offeredCourseRoutes } from '../modules/OfferedCourse/OfferedCourse.route';
-import { EnrolledCourseRoutes } from '../modules/EnrolledCourse/enrolledCourse.route';
+import { EnrolledCourseRoutes } from '../modules/EnrolledCourse/enrolledCourse.routes';
 
 const router = Router();
 
