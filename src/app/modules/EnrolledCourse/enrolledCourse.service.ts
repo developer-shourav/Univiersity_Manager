@@ -6,6 +6,7 @@ import { TEnrolledCourse } from './enrolledCourse.interface';
 import EnrolledCourse from './enrolledCourse.model';
 import { Student } from '../students/student.model';
 import mongoose from 'mongoose';
+import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
@@ -32,7 +33,7 @@ const createEnrolledCourseIntoDB = async (
   }
 
   /* ------------Find the Student to get student objectId---------- */
-  const student = await Student.findOne({ id: userId }).select('id');
+  const student = await Student.findOne({ id: userId }, { _id: 1 });
   if (!student) {
     throw new AppError(httpStatus.NOT_FOUND, 'Student is not found !');
   }
@@ -48,8 +49,22 @@ const createEnrolledCourseIntoDB = async (
     throw new AppError(httpStatus.CONFLICT, 'Student already enrolled');
   }
 
+  /* ----------Check total credits exceeds maxCredit-------- */
+  const semesterRegistration = await SemesterRegistration.findById(isOfferedCourseExist.semesterRegistration).select('maxCredit');
+
+  /* -------Check user total enrolled credits and New enrolled course is more then the maxCredit----  */
+  const enrolledCourses = await EnrolledCourse.aggregate([
+    {
+      $match: {
+        semesterRegistration: isOfferedCourseExist.semesterRegistration,
+        student: student._id,
+      },
+    },
+  ])
+  console.log(enrolledCourses);
+
   /* ----------Start Session for write-------- */
-  const session = await mongoose.startSession();
+ /*  const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
@@ -91,7 +106,7 @@ const createEnrolledCourseIntoDB = async (
     await session.abortTransaction();
     await session.endSession();
     throw new Error(`${err}`);
-  }
+  } */
 };
 const updateEnrolledCourseMarksIntoDB = async (
   facultyId: string,
