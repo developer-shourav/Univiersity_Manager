@@ -52,7 +52,7 @@ const createEnrolledCourseIntoDB = async (
   /* ----------Check total credits exceeds maxCredit-------- */
   const semesterRegistration = await SemesterRegistration.findById(isOfferedCourseExist.semesterRegistration).select('maxCredit');
 
-  /* -------Check user total enrolled credits and New enrolled course is more then the maxCredit----  */
+  /* -------Calculate user enrolled courses all credits----  */
   const enrolledCourses = await EnrolledCourse.aggregate([
     {
       $match: {
@@ -60,8 +60,34 @@ const createEnrolledCourseIntoDB = async (
         student: student._id,
       },
     },
-  ])
-  console.log(enrolledCourses);
+    { $lookup: {
+      from:'courses',
+      localField:'course',
+      foreignField:'_id',
+      as: 'enrolledCourseData'
+    },
+  },
+  {
+    $unwind: '$enrolledCourseData',
+  },
+  {
+   $group: {
+    _id: null, totalEnrolledCredits: { $sum: '$enrolledCourseData.credits' }
+   }
+  },
+  {
+    $project: {
+      _id: 0,
+      totalEnrolledCredits: 1
+    },
+  },
+  ]);
+
+
+/*--------Check user total enrolled credits and New enrolled course is more then the maxCredit------*/
+const sumOfEnrolledCredits = enrolledCourses.length > 0 ? enrolledCourses[0]?.totalEnrolledCredits : 0;
+
+
 
   /* ----------Start Session for write-------- */
  /*  const session = await mongoose.startSession();
