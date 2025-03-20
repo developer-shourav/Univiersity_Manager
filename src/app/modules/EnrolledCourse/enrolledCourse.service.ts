@@ -6,20 +6,22 @@ import { TEnrolledCourse } from './enrolledCourse.interface';
 import EnrolledCourse from './enrolledCourse.model';
 import { Student } from '../students/student.model';
 import mongoose from 'mongoose';
+import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { Course } from '../course/course.model';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
   payload: TEnrolledCourse,
 ) => {
-  /* -------TODO:-----------
-  step1: Check if the offered courses is exists
-  step2: Check if the student is already enrolled
-  step3: Create A Enrolled course
-  step4: 
+  /* -------Break Down The Tasks:-----------
+  Segment 1: Check if the offered courses is exists
+  Segment 2: Check if the student is already enrolled
+  Segment 3: Check if the max capacity of the offered course exceed
+  Segment 4: Create A Enrolled course
 
-   */
+  -----------------------------------*/
 
-  /* ------------heck if the offered courses is exists----------- */
+  /* ------------check if the offered courses is exists----------- */
   const { offeredCourse } = payload;
   const isOfferedCourseExist = await OfferedCourse.findById(offeredCourse);
   if (!isOfferedCourseExist) {
@@ -32,7 +34,7 @@ const createEnrolledCourseIntoDB = async (
   }
 
   /* ------------Find the Student to get student objectId---------- */
-  const student = await Student.findOne({ id: userId }).select('id');
+  const student = await Student.findOne({ id: userId }, { _id: 1 });
   if (!student) {
     throw new AppError(httpStatus.NOT_FOUND, 'Student is not found !');
   }
@@ -46,6 +48,64 @@ const createEnrolledCourseIntoDB = async (
 
   if (isStudentAlreadyEnrolled) {
     throw new AppError(httpStatus.CONFLICT, 'Student already enrolled');
+  }
+
+  /* ----------- Check Course Details----------- */
+  const course = await Course.findById(isOfferedCourseExist.course);
+
+  /* ----------Check total credits exceeds maxCredit-------- */
+  const semesterRegistration = await SemesterRegistration.findById(
+    isOfferedCourseExist.semesterRegistration,
+  ).select('maxCredit');
+
+  /* -------Calculate user enrolled courses all credits----  */
+  const enrolledCourses = await EnrolledCourse.aggregate([
+    {
+      $match: {
+        semesterRegistration: isOfferedCourseExist.semesterRegistration,
+        student: student._id,
+      },
+    },
+    {
+      $lookup: {
+        from: 'courses',
+        localField: 'course',
+        foreignField: '_id',
+        as: 'enrolledCourseData',
+      },
+    },
+    {
+      $unwind: '$enrolledCourseData',
+    },
+    {
+      $group: {
+        _id: null,
+        totalEnrolledCredits: { $sum: '$enrolledCourseData.credits' },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        totalEnrolledCredits: 1,
+      },
+    },
+  ]);
+
+  /*--------Check user total enrolled credits and New enrolled course is more then the maxCredit------*/
+  const sumOfEnrolledCredits =
+    enrolledCourses.length > 0 ? enrolledCourses[0]?.totalEnrolledCredits : 0;
+  const newCourseCredits = course?.credits;
+  const maxCredits = semesterRegistration?.maxCredit;
+
+  if (
+    sumOfEnrolledCredits &&
+    maxCredits &&
+    sumOfEnrolledCredits + newCourseCredits > maxCredits
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'You have exceeded maximum number of credits !',
+    );
   }
 
   /* ----------Start Session for write-------- */
