@@ -160,13 +160,16 @@ const updateEnrolledCourseMarksIntoDB = async (
   facultyId: string,
   payload: Partial<TEnrolledCourse>,
 ) => {
+  const { semesterRegistration, offeredCourse, student, courseMarks } = payload;
 
-  const {semesterRegistration, offeredCourse, student, courseMarks} = payload;
-  
   /* ------------check if the semester registration is exists----------- */
-  const isSemesterRegistrationExist = await SemesterRegistration.findById(semesterRegistration);
+  const isSemesterRegistrationExist =
+    await SemesterRegistration.findById(semesterRegistration);
   if (!isSemesterRegistrationExist) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Semester registration not found !');
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Semester registration not found !',
+    );
   }
 
   /* ------------check if the offered course is exists----------- */
@@ -180,9 +183,6 @@ const updateEnrolledCourseMarksIntoDB = async (
   if (!isStudentExist) {
     throw new AppError(httpStatus.NOT_FOUND, 'Student is not found !');
   }
-
-
-
 
   return { courseMarks };
 };
