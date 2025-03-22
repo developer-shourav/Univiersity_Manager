@@ -153,11 +153,38 @@ const createEnrolledCourseIntoDB = async (
     throw new Error(`${err}`);
   }
 };
+
+/* -----------------------Update Enrolled Course Marks------------------------ */
+
 const updateEnrolledCourseMarksIntoDB = async (
   facultyId: string,
   payload: Partial<TEnrolledCourse>,
 ) => {
-  return { facultyId, payload };
+  const { semesterRegistration, offeredCourse, student, courseMarks } = payload;
+
+  /* ------------check if the semester registration is exists----------- */
+  const isSemesterRegistrationExist =
+    await SemesterRegistration.findById(semesterRegistration);
+  if (!isSemesterRegistrationExist) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Semester registration not found !',
+    );
+  }
+
+  /* ------------check if the offered course is exists----------- */
+  const isOfferedCourseExist = await OfferedCourse.findById(offeredCourse);
+  if (!isOfferedCourseExist) {
+    throw new AppError(httpStatus.NOT_FOUND, 'offered course not found !');
+  }
+
+  /* ------------check if the student is exists----------- */
+  const isStudentExist = await Student.findById(student);
+  if (!isStudentExist) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student is not found !');
+  }
+
+  return { courseMarks };
 };
 
 export const EnrolledCourseServices = {
