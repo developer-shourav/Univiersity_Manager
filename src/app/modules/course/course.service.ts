@@ -14,7 +14,7 @@ const createCourseIntoDB = async (payload: TCourse) => {
 
 /* -------------- Get All Courses From Database ---------- */
 const getAllCoursesFromDB = async (query: Record<string, unknown>) => {
-  const courseSearchableQuery = ['title', 'prefix', 'code'];
+  const courseSearchableQuery = ['title', 'prefix'];
   const courseQuery = new QueryBuilder(
     Course.find().populate('preRequisiteCourses.course'),
     query,
