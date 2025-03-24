@@ -23,7 +23,8 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     .pagination()
     .fieldFiltering();
   const result = await studentQuery.queryModel;
-  return result;
+  const meta = await studentQuery.countTotal();
+  return { meta, result };
 };
 
 /* --------Logic For Get A Students From Database------ */
