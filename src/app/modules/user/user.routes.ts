@@ -15,7 +15,7 @@ const router = express.Router();
 // -----------Create A Student
 router.post(
   '/create-student',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   upload.single('profileImage'),
   formDataToJsonConvertor,
   validateRequest(studentValidations.createStudentValidationSchema),
