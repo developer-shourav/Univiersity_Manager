@@ -25,7 +25,7 @@ router.post(
 // -----------Create A Faculty
 router.post(
   '/create-faculty',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   upload.single('profileImage'),
   formDataToJsonConvertor,
   validateRequest(facultyValidations.createFacultyValidationSchema),
@@ -35,7 +35,7 @@ router.post(
 // -----------Create An Admin
 router.post(
   '/create-admin',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   upload.single('profileImage'),
   formDataToJsonConvertor,
   validateRequest(AdminValidations.createAdminValidationSchema),
@@ -45,7 +45,7 @@ router.post(
 // -----------Change User Status by Admin
 router.patch(
   '/change-status/:id',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   validateRequest(userValidation.changeStatusValidationSchema),
   UserControllers.changeStatus,
 );
@@ -53,7 +53,12 @@ router.patch(
 // -----------Route to get all kinds of users (Admin, Faculty, Student) own data
 router.get(
   '/me',
-  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+  auth(
+    USER_ROLE.admin,
+    USER_ROLE.superAdmin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
   UserControllers.getMe,
 );
 
