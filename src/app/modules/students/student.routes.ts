@@ -10,20 +10,32 @@ const router = express.Router();
 // Will call controller function------
 
 /* -------Get All Student */
-router.get('/', StudentControllers.getAllStudent);
+router.get(
+  '/',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  StudentControllers.getAllStudent,
+);
 
 /* --------Get A Student */
-router.get('/:id', StudentControllers.getAStudent);
+router.get(
+  '/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  StudentControllers.getAStudent,
+);
 
 /* --------Update A Student */
 router.patch(
   '/:id',
-  auth(USER_ROLE.admin, USER_ROLE.faculty),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(studentValidations.updateStudentValidationSchema),
   StudentControllers.updateAStudent,
 );
 
 /* --------Delete A Student */
-router.delete('/:id', StudentControllers.deleteAStudent);
+router.delete(
+  '/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  StudentControllers.deleteAStudent,
+);
 
 export const StudentRoutes = router;
