@@ -16,10 +16,28 @@ router.post(
 );
 
 /* ------------Get All Academic Semester ---------- */
-router.get('/', AcademicSemesterControllers.getAcademicSemesters);
+router.get(
+  '/',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  AcademicSemesterControllers.getAcademicSemesters,
+);
 
 /* ------------Get an Academic Semester ---------- */
-router.get('/:id', AcademicSemesterControllers.getAnAcademicSemester);
+router.get(
+  '/:id',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  AcademicSemesterControllers.getAnAcademicSemester,
+);
 
 /* ------------Update an Academic Semester ---------- */
 router.patch(

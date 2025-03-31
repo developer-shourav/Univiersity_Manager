@@ -16,12 +16,16 @@ router.post(
 );
 
 /* ------------Get All Courses ---------- */
-router.get('/', auth(
-  USER_ROLE.superAdmin,
-  USER_ROLE.admin,
-  USER_ROLE.faculty,
-  USER_ROLE.student,
-), CourseControllers.getAllCourses);
+router.get(
+  '/',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  CourseControllers.getAllCourses,
+);
 
 /* ------------Get A Course ---------- */
 router.get(
@@ -59,6 +63,10 @@ router.delete(
   CourseControllers.removeFacultiesFromCourse,
 );
 /* ------------Delete A Course ---------- */
-router.delete('/:id', auth(USER_ROLE.superAdmin, USER_ROLE.admin), CourseControllers.deleteACourse);
+router.delete(
+  '/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  CourseControllers.deleteACourse,
+);
 
 export const CourseRoutes = router;
