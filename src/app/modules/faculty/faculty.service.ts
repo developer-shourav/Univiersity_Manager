@@ -19,7 +19,12 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   ];
 
   // Search, Filter, Sort, Pagination and Field Filtering Using Query Chaining Method
-  const studentQuery = new QueryBuilder(Faculty.find(), query)
+  const studentQuery = new QueryBuilder(
+    Faculty.find()
+      .populate('user')
+      .populate('academicDepartment academicFaculty'),
+    query,
+  )
     .search(facultySearchFields)
     .filter()
     .sort()
@@ -34,7 +39,7 @@ const getAFacultyFromDB = async (id: string) => {
   // using query
   const result = await Faculty.findById(id)
     .populate('user')
-    .populate('academicDepartment');
+    .populate('academicDepartment academicFaculty');
 
   return result;
 };

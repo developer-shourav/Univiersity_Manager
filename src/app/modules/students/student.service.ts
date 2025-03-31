@@ -17,7 +17,13 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   ];
 
   // Search, Filter, Sort, Pagination and Field Filtering Using Query Chaining Method
-  const studentQuery = new QueryBuilder(Student.find().populate('user'), query)
+  const studentQuery = new QueryBuilder(
+    Student.find()
+      .populate('user')
+      .populate('admissionSemester')
+      .populate('academicDepartment academicFaculty'),
+    query,
+  )
     .search(studentSearchFields)
     .filter()
     .sort()
@@ -34,12 +40,7 @@ const getAStudentFromDB = async (id: string) => {
   const result = await Student.findById(id)
     .populate('user')
     .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
+    .populate('academicDepartment academicFaculty');
 
   // using aggregation
   // const result = await Student.aggregate([{ $match: { id: id } }]);

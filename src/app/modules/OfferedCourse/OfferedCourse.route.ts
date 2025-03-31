@@ -7,7 +7,11 @@ import { USER_ROLE } from '../user/user.constant';
 
 const router = express.Router();
 
-router.get('/', auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty), OfferedCourseControllers.getAllOfferedCourses);
+router.get(
+  '/',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  OfferedCourseControllers.getAllOfferedCourses,
+);
 
 router.get(
   '/my-offered-courses',
@@ -15,12 +19,16 @@ router.get(
   OfferedCourseControllers.getMyOfferedCourses,
 );
 
-router.get('/:id', auth(
-  USER_ROLE.superAdmin,
-  USER_ROLE.admin,
-  USER_ROLE.faculty,
-  USER_ROLE.student,
-), OfferedCourseControllers.getSingleOfferedCourses);
+router.get(
+  '/:id',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  OfferedCourseControllers.getSingleOfferedCourses,
+);
 
 router.post(
   '/create-offered-course',
@@ -36,6 +44,10 @@ router.patch(
   OfferedCourseControllers.updateOfferedCourse,
 );
 
-router.delete('/:id', auth(USER_ROLE.superAdmin, USER_ROLE.admin), OfferedCourseControllers.deleteOfferedCourseFromDB);
+router.delete(
+  '/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  OfferedCourseControllers.deleteOfferedCourseFromDB,
+);
 
 export const offeredCourseRoutes = router;

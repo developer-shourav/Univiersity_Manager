@@ -147,11 +147,11 @@ const assignFacultiesWithCourseIntoDB = async (
 
 /* -------------- Get assigned Faculties in course into DB ---------- */
 const getFacultiesWithCourseFromDB = async (courseId: string) => {
-  const result = await CourseFaculty.findOne({ course: courseId }).populate('faculties');
+  const result = await CourseFaculty.findOne({ course: courseId }).populate(
+    'faculties',
+  );
   return result;
- 
 };
-
 
 /* -------------- Remove Faculties from course into DB ---------- */
 const removeFacultiesFromCourseIntoDB = async (

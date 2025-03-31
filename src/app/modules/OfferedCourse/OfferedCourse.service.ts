@@ -143,7 +143,7 @@ const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
   const meta = await offeredCourseQuery.countTotal();
   return {
     meta,
-    result
+    result,
   };
 };
 
@@ -263,7 +263,7 @@ const getMyOfferedCoursesFromDB = async (
             in: '$$completed.course',
           },
         },
-      }, 
+      },
     },
     {
       $addFields: {
@@ -329,7 +329,6 @@ const getMyOfferedCoursesFromDB = async (
     result,
   };
 };
-
 
 const getSingleOfferedCourseFromDB = async (id: string) => {
   const offeredCourse = await OfferedCourse.findById(id);
